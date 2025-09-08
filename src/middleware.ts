@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify, JWTPayload } from 'jose';
 
-export async function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
 
   // Protect /admin routes

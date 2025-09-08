@@ -18,7 +18,7 @@ export default function LogoutButton() {
 
   return (
     <span
-      className='flex items-center gap-2 text-xl hover:text-red-500 cursor-pointer transition'
+      className={`flex cursor-pointer items-center gap-2 text-xl text-white transition hover:text-red-500`}
       onClick={handleLogout}
     >
       <LogOut size={28} />

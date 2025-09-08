@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { roboto } from './fonts';
+import { nunito } from './fonts';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${roboto.className} antialiased`}>{children}</body>
+      <body className={`${nunito.className} antialiased`}>{children}</body>
     </html>
   );
 }
