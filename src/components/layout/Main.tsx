@@ -1,7 +1,19 @@
+import RecipeService from '@/service/RecipeService';
+import RecipeComponent from '../recipes/RecipeComponent';
 import CenteredContentBlock from './CenteredContentBlock';
 import Hero from './Hero';
+import useSWR from 'swr';
 
 export default function Main() {
+  const fetcher = async () => {
+    const response = await RecipeService.getRecipes();
+    return response;
+  };
+
+  const { data, error, isLoading } = useSWR('/api/recipes/getRecipes', fetcher);
+
+  console.log(data);
+
   return (
     <>
       <Hero />
@@ -13,6 +25,11 @@ export default function Main() {
             inspireren.
           </>
         }
+      />
+      <RecipeComponent
+        recipes={data ?? []}
+        error={error?.message}
+        isLoading={isLoading}
       />
     </>
   );

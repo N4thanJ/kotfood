@@ -21,3 +21,11 @@ model User {
   username  String
   password  String
 }
+
+model Recipe {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  description String   @db.VarChar(80)
+}

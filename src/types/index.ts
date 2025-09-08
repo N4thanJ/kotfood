@@ -14,3 +14,9 @@ export type RegisterBody = {
   username: string;
   password: string;
 };
+
+export type Recipe = {
+  id?: string;
+  name: string;
+  description: string;
+};

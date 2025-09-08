@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { User } from '@/types';
 import Navigation from '@/components/layout/Navigation';
 import Main from '@/components/layout/Main';
+import RecipeCard from '@/components/recipes/RecipeCard';
 
 export default function Home() {
   const [user, setUser] = useState<Pick<
