@@ -32,6 +32,8 @@ export default function LoginFormComponent() {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const validate = (data: LoginBody) => {
@@ -54,6 +56,8 @@ export default function LoginFormComponent() {
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
+    setIsLoading(true);
+
     const data: LoginBody = { email, password };
     const errors = validate(data);
 
@@ -65,10 +69,12 @@ export default function LoginFormComponent() {
     try {
       const response = await UserService.login(data);
       console.log('Login successful:', response);
-
+      setIsLoading(false);
       router.push('/');
     } catch (err: any) {
       console.log('Error logging in:', err.message || err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -136,9 +142,13 @@ export default function LoginFormComponent() {
       <button
         type='submit'
         onClick={handleLogin}
-        className='mt-2 px-4 py-3 cursor-pointer bg-lime-500 dark:bg-lime-600 text-white rounded-full hover:bg-lime-600 dark:hover:bg-lime-500 transition-colors'
+        disabled={isLoading}
+        className={`mt-2 px-4 py-3 cursor-pointer bg-lime-500 dark:bg-lime-600 text-white rounded-full transition-colors
+          hover:bg-lime-600 dark:hover:bg-lime-500
+          ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
+        `}
       >
-        Login
+        {isLoading ? 'Logging in...' : 'Login'}
       </button>
 
       {/* Register */}

@@ -42,6 +42,25 @@ const register = async (data: RegisterBody) => {
   }
 };
 
-const UserService = { login, register };
+export const logout = async (): Promise<Response> => {
+  try {
+    const res = await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || 'Logout failed');
+    }
+
+    return res; // return the Response object
+  } catch (err) {
+    console.error('UserService logout error:', err);
+    throw err;
+  }
+};
+
+const UserService = { login, register, logout };
 
 export default UserService;

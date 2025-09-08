@@ -4,9 +4,9 @@ import { useState } from 'react';
 import * as z from 'zod';
 import { User, Mail, Lock } from 'lucide-react';
 import UserService from '@/service/UserService';
-import { RegisterBody } from '@/types';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { RegisterBody } from '@/types';
 
 const registerSchema = z.object({
   email: z.email({ message: 'Please enter a valid email address.' }),
@@ -40,7 +40,7 @@ export default function RegisterFormComponent() {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = () => {
     try {
@@ -68,7 +68,7 @@ export default function RegisterFormComponent() {
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
 
     const errors = validate();
     setEmailError(errors.email || null);
@@ -76,12 +76,13 @@ export default function RegisterFormComponent() {
     setPasswordError(errors.password || null);
 
     if (Object.keys(errors).length > 0) {
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
     try {
-      await UserService.register({ email, username, password });
+      const registerBody: RegisterBody = { email, username, password };
+      await UserService.register(registerBody);
 
       // Reset fields
       setEmail('');
@@ -94,7 +95,7 @@ export default function RegisterFormComponent() {
       console.error('Registration error:', err);
       alert(err.message || 'Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -188,12 +189,12 @@ export default function RegisterFormComponent() {
       <button
         type='submit'
         onClick={handleRegister}
-        disabled={loading}
+        disabled={isLoading}
         className={`mt-2 px-4 py-3 cursor-pointer bg-lime-500 dark:bg-lime-600 text-white rounded-full hover:bg-lime-600 dark:hover:bg-lime-500 transition-colors ${
-          loading ? 'opacity-60 cursor-not-allowed' : ''
+          isLoading ? 'opacity-60 cursor-not-allowed' : ''
         }`}
       >
-        {loading ? 'Registering...' : 'Register'}
+        {isLoading ? 'Registering...' : 'Register'}
       </button>
 
       <small>

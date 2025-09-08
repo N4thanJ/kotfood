@@ -1,20 +1,25 @@
-// app/api/me/route.ts
+// app/api/auth/ping/route.ts
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
+import cookie from 'cookie';
 
 export async function GET(req: Request) {
-  const token = req.headers
-    .get('cookie')
-    ?.split('; ')
-    .find((c) => c.startsWith('token='))
-    ?.split('=')[1];
-  if (!token) return NextResponse.json({ user: null });
+  const cookies = req.headers.get('cookie') || '';
+  const parsedCookies = cookie.parse(cookies);
+  const token = parsedCookies.token;
+
+  if (!token) {
+    return NextResponse.json({ user: null }, { status: 401 });
+  }
+
+  if (!process.env.JWT_SECRET) {
+    console.error('JWT_SECRET is not set');
+    return NextResponse.json({ user: null }, { status: 500 });
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      id: string;
-    };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
       select: {
@@ -23,8 +28,14 @@ export async function GET(req: Request) {
         email: true,
       },
     });
+
+    if (!user) {
+      return NextResponse.json({ user: null }, { status: 404 });
+    }
+
     return NextResponse.json({ user });
-  } catch {
-    return NextResponse.json({ user: null });
+  } catch (err) {
+    console.error('JWT verification failed:', err);
+    return NextResponse.json({ user: null }, { status: 401 });
   }
 }
