@@ -72,11 +72,13 @@ export default function LoginFormComponent() {
       if (!response.ok) {
         console.log('Error logging in, check the JWT_SECRET');
         throw new Error('Error logging in, check the JWT_SECRET');
-      } else {
-        console.log('Login successful:', response);
-        router.push('/');
-        setIsLoading(false);
       }
+
+      console.log('Login successful:', response);
+      router.push('/');
+      setIsLoading(false);
+
+      return;
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.log('Error logging in:', err.message);
