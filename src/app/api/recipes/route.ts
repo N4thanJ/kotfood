@@ -1,8 +1,20 @@
-// app/api/recipes/postRecipe/route.ts
+// app/api/recipes/route.ts
 
 import { prisma } from '@/lib/prisma';
-import { Recipe } from '@/types';
 import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET() {
+  try {
+    const recipes = await prisma.recipe.findMany();
+    return NextResponse.json(recipes, { status: 200 });
+  } catch (error) {
+    console.error('Error getting recipes: ', error);
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 },
+    );
+  }
+}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const body = await request.json();
@@ -13,24 +25,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const { name, description }: Recipe = body;
+  const { name, description, imageUrl } = body;
 
-  if (!name || !description) {
+  if (!name || !description || !imageUrl) {
     return NextResponse.json(
-      { message: 'All fields are required' },
+      { message: 'All fields are required (name, description, imageUrl)' },
       { status: 400 },
     );
   }
 
   try {
-    const response = await prisma.recipe.create({
+    const recipe = await prisma.recipe.create({
       data: {
         name,
         description,
+        imageUrl,
       },
     });
 
-    return NextResponse.json(response, { status: 201 });
+    return NextResponse.json(recipe, { status: 201 });
   } catch (error) {
     console.error('Error creating recipe: ', error);
     return NextResponse.json(

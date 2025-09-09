@@ -3,16 +3,19 @@ import RecipeComponent from '../recipes/RecipeComponent';
 import CenteredContentBlock from './CenteredContentBlock';
 import Hero from './Hero';
 import useSWR from 'swr';
+import { User } from '@/types';
 
-export default function Main() {
+interface Props {
+  user: Pick<User, 'id' | 'email' | 'username'> | null;
+}
+
+export default function Main({ user }: Props) {
   const fetcher = async () => {
     const response = await RecipeService.getRecipes();
     return response;
   };
 
-  const { data, error, isLoading } = useSWR('/api/recipes/getRecipes', fetcher);
-
-  console.log(data);
+  const { data, error, isLoading } = useSWR('/api/recipes', fetcher);
 
   return (
     <>
@@ -20,9 +23,9 @@ export default function Main() {
       <CenteredContentBlock
         content={
           <>
-            Zet u, pak een taske koffie, en leun even achterover. Scroll rustig
-            verder om uw volgende culinaire avontuur te ontdekken en laat je
-            inspireren.
+            Zet u comfortabel, pak uw koffie erbij, en scroll rustig verder.
+            Ontdek smakelijke recepten en zoete dessertjes voor uw eigen
+            kotkeukenavontuur.
           </>
         }
       />
@@ -30,6 +33,7 @@ export default function Main() {
         recipes={data ?? []}
         error={error?.message}
         isLoading={isLoading}
+        user={user}
       />
     </>
   );

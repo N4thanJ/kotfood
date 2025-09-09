@@ -1,11 +1,14 @@
 import LoginFormComponent from '@/components/auth/LoginFormComponent';
+import Link from 'next/link';
 
 export default function Login() {
   return (
     <section className='flex min-h-screen flex-col bg-gray-50 p-8 dark:bg-gray-900'>
       {/* Logo top-left */}
       <div className='mb-12'>
-        <h1 className={`text-4xl font-black`}>KotFood</h1>
+        <Link href='/'>
+          <h1 className={`text-4xl font-black`}>KotFood</h1>
+        </Link>
       </div>
 
       {/* Login content */}

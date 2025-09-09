@@ -1,29 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { User } from '@/types';
 import Navigation from '@/components/layout/Navigation';
 import Main from '@/components/layout/Main';
-import RecipeCard from '@/components/recipes/RecipeCard';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Home() {
-  const [user, setUser] = useState<Pick<
-    User,
-    'id' | 'email' | 'username'
-  > | null>(null);
-
-  useEffect(() => {
-    fetch('/api/auth/ping')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user) setUser(data.user);
-      });
-  }, []);
+  const { user } = useAuth();
 
   return (
     <>
-      <Navigation user={user} />
-      <Main />
+      <Navigation user={user} recipePage={false} />
+      <Main user={user} />
     </>
   );
 }
