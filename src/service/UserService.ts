@@ -2,11 +2,19 @@ import { LoginBody, RegisterBody } from '@/types';
 
 const login = async (data: LoginBody) => {
   try {
-    return await fetch('/api/auth/login', {
+    const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
+
+    const resData = await res.json();
+
+    if (!res.ok) {
+      throw new Error(resData.error || 'Login failed');
+    }
+
+    return resData;
   } catch (err) {
     console.error('UserService login error:', err);
     throw err;
