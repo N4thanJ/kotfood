@@ -69,7 +69,10 @@ export default function LoginFormComponent() {
     try {
       const response = await UserService.login(data);
 
-      if (response.ok) {
+      if (!response.ok) {
+        console.log('Error logging in, check the JWT_SECRET');
+        throw new Error('Error logging in, check the JWT_SECRET');
+      } else {
         console.log('Login successful:', response);
         setIsLoading(false);
         router.push('/');
