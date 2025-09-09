@@ -1,6 +1,6 @@
 import { LoginBody, RegisterBody } from '@/types';
 
-const login = async (data: LoginBody) => {
+const login = async (data: LoginBody): Promise<Response> => {
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',

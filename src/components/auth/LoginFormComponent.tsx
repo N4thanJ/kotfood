@@ -64,26 +64,51 @@ export default function LoginFormComponent() {
     setUsernameError(errors.email || null);
     setPasswordError(errors.password || null);
 
-    if (Object.keys(errors).length > 0) return;
+    if (Object.keys(errors).length > 0) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await UserService.login(data);
 
-      if (!response.ok) {
-        console.log('Error logging in, check the JWT_SECRET');
-        throw new Error('Error logging in, check the JWT_SECRET');
-      }
-      console.log('Login successful:', response);
-      router.push('/');
+      // Add more detailed logging
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      console.log('Full response:', response);
 
+      if (!response.ok) {
+        let errorMessage = 'Login failed';
+        try {
+          const errorData = await response.json();
+          console.log('Error response body:', errorData);
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch (parseError) {
+          console.log('Could not parse error response');
+        }
+
+        throw new Error(errorMessage);
+      }
+
+      // If response is ok, try to parse the success response
+      const responseData = await response.json();
+      console.log('Login successful, response data:', responseData);
+
+      // Check if there's a token in the response
+      if (responseData.token) {
+        // Store token if needed (localStorage, cookies, etc.)
+        console.log('Token received:', responseData.token);
+      }
+
+      router.push('/');
       return;
     } catch (err: unknown) {
+      console.error('Login error details:', err);
       if (err instanceof Error) {
         console.log('Error logging in:', err.message);
       } else {
         console.log('Error logging in:', err);
       }
-    } finally {
       setIsLoading(false);
     }
   };
