@@ -68,9 +68,12 @@ export default function LoginFormComponent() {
 
     try {
       const response = await UserService.login(data);
-      console.log('Login successful:', response);
-      setIsLoading(false);
-      router.push('/');
+
+      if (response.ok) {
+        console.log('Login successful:', response);
+        setIsLoading(false);
+        router.push('/');
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.log('Error logging in:', err.message);
