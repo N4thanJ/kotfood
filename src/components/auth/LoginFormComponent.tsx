@@ -7,6 +7,7 @@ import * as z from 'zod';
 import { User, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { mutate } from 'swr';
 
 const formSchema = z.object({
   email: z.email({ message: 'Please enter a valid email address.' }),
@@ -81,12 +82,10 @@ export default function LoginFormComponent() {
         } catch (parseError) {
           console.log('Could not parse error response');
         }
-
         throw new Error(errorMessage);
       }
-
+      await mutate('/api/auth/ping');
       router.push('/');
-      return;
     } catch (err: unknown) {
       console.error('Login error details:', err);
       if (err instanceof Error) {
