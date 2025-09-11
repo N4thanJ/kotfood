@@ -72,11 +72,6 @@ export default function LoginFormComponent() {
     try {
       const response = await UserService.login(data);
 
-      // Add more detailed logging
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-      console.log('Full response:', response);
-
       if (!response.ok) {
         let errorMessage = 'Login failed';
         try {
@@ -88,16 +83,6 @@ export default function LoginFormComponent() {
         }
 
         throw new Error(errorMessage);
-      }
-
-      // If response is ok, try to parse the success response
-      const responseData = await response.json();
-      console.log('Login successful, response data:', responseData);
-
-      // Check if there's a token in the response
-      if (responseData.token) {
-        // Store token if needed (localStorage, cookies, etc.)
-        console.log('Token received:', responseData.token);
       }
 
       router.push('/');

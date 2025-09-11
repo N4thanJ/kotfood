@@ -7,7 +7,7 @@ const login = async (data: LoginBody): Promise<Response> => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-    credentials: 'include', // Important for cookies
+    credentials: 'include',
   });
 
   return response;
