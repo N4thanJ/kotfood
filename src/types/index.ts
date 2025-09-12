@@ -41,8 +41,8 @@ export type RecipeBody = {
   name: string;
   description: string;
   imageUrl: string;
-  category: Category;
-  difficulty: Difficulty;
+  category?: Category;
+  difficulty?: Difficulty;
 };
 
 // Enums
