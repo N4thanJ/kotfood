@@ -1,5 +1,5 @@
+import { playfair } from '@/app/fonts';
 import { User } from '@/types';
-import { Quote } from 'lucide-react';
 
 interface Props {
   user: User;
@@ -7,32 +7,37 @@ interface Props {
 
 export default function RecipeCreator({ user }: Props) {
   return (
-    <aside className='rounded-2xl bg-green-50 p-6 shadow-md'>
+    <aside>
+      <h2 className={`mb-2 text-2xl font-bold ${playfair.className}`}>
+        Het brein achter dit recept
+      </h2>
+
       {/* Avatar */}
-      <div className='mb-4 flex justify-center'>
+      <div className='relative mb-4 flex justify-center'>
         <img
           src={user.imageUrl || '/defaults/avatar.jpg'}
           alt={user.username}
-          className='h-24 w-24 rounded-full border-4 border-black object-cover shadow-lg'
+          className='object-cover'
         />
       </div>
 
       {/* Name */}
-      <h2 className={`mb-2 text-center text-2xl font-bold text-gray-900`}>
-        {user.username}
-      </h2>
+      <div>
+        {/* Username */}
+        <span className='block text-lg font-bold text-gray-900 dark:text-gray-100'>
+          {user.username}
+        </span>
 
-      {/* Divider */}
-      <div className='mx-auto mb-4 h-1 w-16 rounded-full bg-green-500 opacity-70'></div>
+        {/* Divider */}
+        <div className='mb-4 h-1 w-16 rounded-full bg-green-500 opacity-80 dark:bg-green-400'></div>
 
-      {/* Optional Info */}
-      {user.bio && (
-        <div className='flex flex-col items-center gap-2 text-center text-sm leading-relaxed text-gray-700'>
-          <Quote fill='black' />
-          <span>{user.bio}</span>
-          <Quote fill='black' />
-        </div>
-      )}
+        {/* Bio */}
+        {user.bio && (
+          <span className='mt-1 block text-sm text-gray-600 italic dark:text-gray-300'>
+            {user.bio}
+          </span>
+        )}
+      </div>
     </aside>
   );
 }

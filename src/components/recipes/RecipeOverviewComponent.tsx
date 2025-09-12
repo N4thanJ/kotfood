@@ -1,8 +1,9 @@
-import { Recipe, User, Category, Difficulty } from '@/types';
+'use client';
+
+import { type Recipe, type User, Category, Difficulty } from '@/types';
 import { useState } from 'react';
 import RecipeSidebar from './RecipeSidebar';
 import RecipeOverviewCard from './RecipeOverviewCard';
-import Link from 'next/link';
 
 interface Props {
   recipes: Recipe[];
@@ -27,9 +28,7 @@ export default function RecipeOverviewComponent({
 }: Props) {
   const [category, setCategory] = useState<Category | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
-
   const difficulties = getAllDifficulties();
-
   const usedCategories = Array.from(
     new Set(recipes.map((recipe) => recipe.category)),
   ) as Category[];
@@ -41,8 +40,38 @@ export default function RecipeOverviewComponent({
     return matches;
   });
 
+  const PAGE_SIZE = 8;
+  const [page, setPage] = useState(1);
+  const paginatedRecipes = filteredRecipes.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE,
+  );
+
+  if (isLoading) {
+    return (
+      <section className='flex h-[calc(100vh-15px)] items-center justify-center px-8 pt-20'>
+        <div className='text-center'>
+          <div className='mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-green-200 border-t-green-600'></div>
+          <p className='text-gray-600 dark:text-gray-400'>Recepten laden...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className='flex h-[calc(100vh-15px)] items-center justify-center px-8 pt-20'>
+        <div className='text-center'>
+          <p className='text-red-600 dark:text-red-400'>
+            Fout bij het laden van recepten: {error}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className='flex gap-6 p-8'>
+    <section className='flex h-[calc(100vh-15px)] gap-6 px-8 pt-20'>
       {/* Sidebar */}
       <RecipeSidebar
         usedCategories={usedCategories}
@@ -52,44 +81,53 @@ export default function RecipeOverviewComponent({
         setCategory={setCategory}
         setDifficulty={setDifficulty}
       />
-
       {/* Recipe list */}
-      <article className='flex-1 rounded-xl bg-green-50 p-8 shadow-sm'>
-        <h2 className='mb-6 text-2xl font-extrabold text-green-800'>
+      <article className='flex flex-1 flex-col rounded-xl bg-green-50 p-8 shadow-sm dark:bg-green-900'>
+        <h2 className='mb-4 text-2xl font-extrabold text-green-800 dark:text-green-200'>
           Alle recepten
         </h2>
-
-        {isLoading ? (
-          <p className='py-8 text-center text-gray-500'>Even geduld...</p>
-        ) : error ? (
-          <p className='py-8 text-center text-red-500'>{error}</p>
-        ) : filteredRecipes.length === 0 ? (
-          <p className='py-8 text-center text-gray-500'>
-            Geen recepten gevonden.
-          </p>
-        ) : (
-          <div className='grid grid-cols-4 gap-4'>
-            {filteredRecipes.slice(0, 8).map((recipe) => (
-              <RecipeOverviewCard key={recipe.id} recipe={recipe} />
-            ))}
+        <div className='flex h-full min-h-0 flex-1 flex-col'>
+          {/* Scrollable recipe grid */}
+          <div className='min-h-0 flex-1 overflow-auto'>
+            {paginatedRecipes.length > 0 ? (
+              <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+                {paginatedRecipes.map((recipe) => (
+                  <RecipeOverviewCard key={recipe.id} recipe={recipe} />
+                ))}
+              </div>
+            ) : (
+              <div className='flex h-full items-center justify-center'>
+                <p className='text-gray-500 dark:text-gray-400'>
+                  Geen recepten gevonden met de huidige filters.
+                </p>
+              </div>
+            )}
           </div>
-        )}
 
-        {user ? (
-          <p className='mt-4 text-center'>
-            Wil je graag zelf eentje publiceren?{' '}
-            <Link href='/recipes' className='text-green-700 underline'>
-              Klik dan hier!
-            </Link>
-          </p>
-        ) : (
-          <p className='mt-4 text-center'>
-            <Link href='/login' className='text-green-700 underline'>
-              Log in
-            </Link>{' '}
-            om zelf een recept te publiceren.
-          </p>
-        )}
+          {/* Static pagination at bottom */}
+          {filteredRecipes.length > PAGE_SIZE && (
+            <div className='mt-4 flex flex-shrink-0 items-center justify-center gap-4 pt-4 dark:border-green-700'>
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((p) => p - 1)}
+                className='rounded-md bg-gray-200 px-3 py-1 text-sm transition-colors hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600'
+              >
+                Vorige
+              </button>
+              <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                Pagina {page} van{' '}
+                {Math.ceil(filteredRecipes.length / PAGE_SIZE)}
+              </span>
+              <button
+                disabled={page * PAGE_SIZE >= filteredRecipes.length}
+                onClick={() => setPage((p) => p + 1)}
+                className='rounded-md bg-gray-200 px-3 py-1 text-sm transition-colors hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600'
+              >
+                Volgende
+              </button>
+            </div>
+          )}
+        </div>
       </article>
     </section>
   );

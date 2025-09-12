@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 interface Props {
-  content: ReactNode;
+  content?: ReactNode;
 }
 
 export default function RecipeContent({ content }: Props) {

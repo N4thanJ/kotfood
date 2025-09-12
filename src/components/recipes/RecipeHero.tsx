@@ -8,13 +8,15 @@ interface Props {
 export default function RecipeHero({ recipe }: Props) {
   return (
     <article>
+      {/* Title */}
       <h1
-        className={`mb-4 text-5xl font-bold text-gray-900 ${playfair.className}`}
+        className={`mb-4 text-5xl font-bold text-gray-900 dark:text-gray-100 ${playfair.className}`}
       >
         {recipe.name}
       </h1>
+
       {/* Created At / Updated At */}
-      <div className='mb-6 flex gap-4 text-sm text-gray-500'>
+      <div className='mb-6 flex gap-4 text-sm text-gray-500 dark:text-gray-400'>
         <span>
           Gepost op:{' '}
           {new Date(recipe.createdAt).toLocaleDateString('nl-NL', {
@@ -32,24 +34,25 @@ export default function RecipeHero({ recipe }: Props) {
           })}
         </span>
       </div>
+
       {/* Image */}
       {recipe.imageUrl && (
         <div className='mb-6'>
           <img
             src={recipe.imageUrl}
             alt={recipe.name}
-            className='h-auto w-full rounded-lg object-cover shadow-sm'
+            className='h-auto w-full rounded-lg object-cover shadow-sm dark:shadow-none'
           />
         </div>
       )}
+
       {/* Description */}
-      <p className='text-lg leading-relaxed text-gray-700'>
+      <p className='text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
         {recipe.description}
       </p>
+
       {/* Divider */}
-      <div
-        className={`mt-2 mb-4 h-1 w-48 rounded-sm bg-green-500 opacity-50`}
-      ></div>
+      <div className='mt-2 mb-4 h-1 w-48 rounded-sm bg-green-500 opacity-80 dark:opacity-70'></div>
     </article>
   );
 }

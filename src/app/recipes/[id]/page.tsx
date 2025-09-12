@@ -1,4 +1,5 @@
 'use client';
+import Footer from '@/components/layout/Footer';
 import Navigation from '@/components/layout/Navigation';
 import RecipePageComponent from '@/components/recipes/RecipePageComponent';
 import { useAuth } from '@/contexts/AuthContext';
@@ -28,7 +29,7 @@ export default function Recipe() {
   if (error) {
     return (
       <main>
-        <Navigation user={user} recipePage={true} />
+        <Navigation user={user} darkerText />
         <div>Recipe not found.</div>
       </main>
     );
@@ -36,8 +37,9 @@ export default function Recipe() {
 
   return (
     <main>
-      <Navigation user={user} recipePage={true} />
+      <Navigation user={user} darkerText />
       {data && <RecipePageComponent recipe={data} />}
+      <Footer user={user} />
     </main>
   );
 }

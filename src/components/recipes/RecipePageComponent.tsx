@@ -14,10 +14,10 @@ export default function RecipePageComponent({ recipe }: Props) {
     <section className='mx-auto flex max-w-[1200px] gap-8 px-6 pt-24'>
       <div className='flex-1'>
         <RecipeHero recipe={recipe} />
-        <RecipeContent content={<>Hello world!</>} />
+        <RecipeContent />
       </div>
       {recipe.createdBy && (
-        <div className='flex-[0.4]'>
+        <div className='flex-[0.3]'>
           <RecipeCreator user={recipe.createdBy} />
         </div>
       )}

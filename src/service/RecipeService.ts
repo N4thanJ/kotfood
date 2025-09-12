@@ -1,3 +1,5 @@
+import { RecipeBody } from '@/types';
+
 const getRecipes = async () => {
   try {
     const res = await fetch('/api/recipes', {
@@ -38,6 +40,26 @@ const getRecipeByID = async (id: string) => {
   }
 };
 
-const RecipeService = { getRecipes, getRecipeByID };
+const createRecipe = async (url: string, { arg }: { arg: RecipeBody }) => {
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(arg),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to create recipe');
+    }
+
+    return res;
+  } catch (err) {
+    console.error('Getting recipe by id failed:', err);
+    throw err;
+  }
+};
+
+const RecipeService = { getRecipes, getRecipeByID, createRecipe };
 
 export default RecipeService;

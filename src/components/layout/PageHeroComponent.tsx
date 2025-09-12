@@ -3,34 +3,38 @@ import { ReactNode } from 'react';
 interface PageHeroProps {
   title: string;
   content?: ReactNode;
-  bgColor?: string;
-  textColor?: string;
-  imageUrl?: string; // optioneel
+  imageUrl?: string;
 }
 
 export default function PageHeroComponent({
   title,
   content,
-  bgColor = 'bg-gray-800',
-  textColor = 'text-yellow-100',
   imageUrl,
 }: PageHeroProps) {
   return (
     <section
-      className={`${bgColor} relative flex h-[70svh] w-full items-center px-12 py-16`}
+      className={`relative flex h-[70svh] w-full items-center bg-gray-100 px-12 py-16 dark:bg-gray-900`}
     >
       {/* Tekstblok links */}
       <div className='z-10 flex max-w-xl flex-col justify-center'>
-        <h1 className={`mb-4 text-4xl font-extrabold md:text-5xl ${textColor}`}>
+        <h1
+          className={`mb-4 text-4xl font-extrabold text-gray-900 md:text-5xl dark:text-yellow-100`}
+        >
           {title}
         </h1>
 
+        {/* Divider */}
         <div
-          className={`bg-background mb-4 h-1 w-16 rounded-sm ${textColor} opacity-50`}
+          className={`mb-4 h-1 w-16 rounded-sm bg-green-500 opacity-80 dark:bg-yellow-200`}
         ></div>
 
+        {/* Content */}
         {content && (
-          <div className={`text-lg md:text-xl ${textColor}`}>{content}</div>
+          <div
+            className={`text-lg text-gray-700 md:text-xl dark:text-yellow-100`}
+          >
+            {content}
+          </div>
         )}
       </div>
 
@@ -42,7 +46,7 @@ export default function PageHeroComponent({
             alt={title}
             className='h-full w-full object-cover'
           />
-          <div className='pointer-events-none absolute inset-0 bg-black opacity-40' />
+          <div className='pointer-events-none absolute inset-0 bg-black/40 dark:bg-black/50' />
         </div>
       )}
     </section>

@@ -7,10 +7,10 @@ import { useState } from 'react';
 
 interface Props {
   user: Pick<User, 'id' | 'email' | 'username'> | null;
-  recipePage: boolean;
+  darkerText: boolean;
 }
 
-export default function Navigation({ user, recipePage }: Props) {
+export default function Navigation({ user, darkerText }: Props) {
   const [isAtTop, setIsAtTop] = useState<boolean>(true);
 
   useEffect(() => {
@@ -27,9 +27,9 @@ export default function Navigation({ user, recipePage }: Props) {
 
   return (
     <nav
-      className={`fixed top-0 right-0 left-0 z-50 border-slate-200 transition-all ${
+      className={`fixed top-0 right-0 left-0 z-50 border-slate-200 px-4 transition-all ${
         !isAtTop
-          ? `${!recipePage ? 'bg-background/30' : 'bg-white/30'} shadow-md backdrop-blur-md`
+          ? `${!darkerText ? 'bg-background/30' : 'bg-white/30'} shadow-md backdrop-blur-md`
           : ''
       }`}
     >
@@ -37,7 +37,7 @@ export default function Navigation({ user, recipePage }: Props) {
         {/* Logo */}
         <Link href={'/'}>
           <h1
-            className={`text-4xl font-black ${isAtTop && !recipePage ? 'text-white' : ''}`}
+            className={`text-4xl font-black ${isAtTop && !darkerText ? 'text-white' : ''}`}
           >
             Kotfood
           </h1>
@@ -46,7 +46,7 @@ export default function Navigation({ user, recipePage }: Props) {
         <div className='flex items-center'>
           {/* Links */}
           <ul
-            className={`hidden space-x-8 pr-6 font-medium ${isAtTop && !recipePage ? 'text-white' : ''} md:flex`}
+            className={`hidden space-x-8 pr-6 font-medium ${isAtTop && !darkerText ? 'text-white' : ''} md:flex`}
           >
             <li>
               <Link
@@ -56,22 +56,25 @@ export default function Navigation({ user, recipePage }: Props) {
                 Recepten
               </Link>
             </li>
-            <li>
-              <Link
-                href='/'
-                className='text-xl font-semibold transition-colors hover:underline'
-              >
-                Dessertjes
-              </Link>
-            </li>
+
+            {user && (
+              <li>
+                <Link
+                  href='/new'
+                  className='text-xl font-semibold transition-colors hover:underline'
+                >
+                  Nieuw recept
+                </Link>
+              </li>
+            )}
           </ul>
 
           {/* Auth buttons */}
           <div className='flex items-center pl-6'>
             {!user ? (
-              <LoginButton isAtTop={isAtTop} recipePage={recipePage} />
+              <LoginButton isAtTop={isAtTop} darkerText={darkerText} />
             ) : (
-              <LogoutButton isAtTop={isAtTop} recipePage={recipePage} />
+              <LogoutButton isAtTop={isAtTop} darkerText={darkerText} />
             )}
           </div>
         </div>

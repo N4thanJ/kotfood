@@ -1,4 +1,5 @@
-import { Recipe } from '@/types';
+import type { Recipe } from '@/types';
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 
 interface Props {
@@ -7,23 +8,28 @@ interface Props {
 
 export default function RecipeOverviewCard({ recipe }: Props) {
   return (
-    <div className='flex flex-col rounded-md border border-gray-200 shadow-sm'>
-      <img
-        src={recipe.imageUrl}
-        alt={recipe.name}
-        className='mb-2 h-32 w-full rounded-md object-cover'
-      />
-      <div className='p-4'>
-        <h3 className='text-lg font-bold'>{recipe.name}</h3>
-        <p className='line-clamp-2 text-sm text-gray-600'>
-          {recipe.description}
-        </p>
-        <Link href={`/recipes/${recipe.id}`}>
-          <span className='mt-4 block w-full rounded-full bg-lime-600 px-2 py-1 text-center text-sm text-white'>
-            Bekijk
-          </span>
-        </Link>
+    <Link href={`/recipes/${recipe.id}`} className='group block h-full w-full'>
+      <div className='relative flex h-full w-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-800'>
+        <div className='relative h-28 w-full overflow-hidden'>
+          <img
+            src={recipe.imageUrl || '/placeholder.svg'}
+            alt={recipe.name}
+            className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+          />
+          {/* Overlay with icon on hover */}
+          <div className='absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/10'>
+            <Search className='h-6 w-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
+          </div>
+        </div>
+        <div className='flex flex-1 flex-col p-3'>
+          <h3 className='text-base font-bold text-gray-900 dark:text-gray-100'>
+            {recipe.name}
+          </h3>
+          <p className='line-clamp-2 flex-1 text-xs text-gray-600 dark:text-gray-300'>
+            {recipe.description}
+          </p>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -10,7 +10,7 @@ export default function RecipeCard({ recipe }: Props) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <article className='card bg-base-100 bg-background flex w-80 flex-col overflow-hidden rounded-md shadow-sm'>
+    <article className='card bg-base-100 flex w-80 flex-col overflow-hidden rounded-md bg-white shadow-sm'>
       <figure className='relative'>
         <img
           src={
@@ -31,11 +31,13 @@ export default function RecipeCard({ recipe }: Props) {
       </figure>
 
       <div className='card-body flex flex-1 flex-col p-4'>
-        <h2 className='card-title font-bold'>{recipe.name}</h2>
-        <p className='mb-4'>{recipe.description}</p>
+        <h2 className='card-title dark:text-background font-bold'>
+          {recipe.name}
+        </h2>
+        <p className='dark:text-background mb-4'>{recipe.description}</p>
         <div className='card-actions mt-auto'>
           <Link href={`/recipes/${recipe.id}`}>
-            <span className='btn block w-full rounded-full bg-lime-600 px-3 py-2 text-center text-white'>
+            <span className='btn block w-full rounded-full bg-green-600 px-3 py-2 text-center text-white transition-all hover:bg-green-700'>
               Check dit recept
             </span>
           </Link>

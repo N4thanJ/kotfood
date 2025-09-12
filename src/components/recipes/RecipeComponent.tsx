@@ -1,6 +1,7 @@
 import { Recipe, User } from '@/types';
 import RecipeCard from './RecipeCard';
 import Link from 'next/link';
+import RecipeNavigator from './RecipeNavigator';
 
 interface Props {
   recipes: Recipe[];
@@ -16,17 +17,19 @@ export default function RecipeComponent({
   user,
 }: Props) {
   return (
-    <article className='rounded-xl bg-green-50 p-16'>
+    <article className='bg-background rounded-xl p-16 dark:bg-green-900'>
       <div className='mx-auto max-w-[1028px]'>
-        <h2 className='mb-6 text-2xl font-extrabold text-green-800'>
-          Hier zijn al enkele gerechten
-        </h2>
+        <h2 className='mb-4 text-3xl font-bold'>Onze favorieten ❤️</h2>
         {isLoading ? (
-          <p className='py-8 text-center text-gray-500'>Even geduld...</p>
+          <p className='py-8 text-center text-gray-500 dark:text-gray-400'>
+            Even geduld...
+          </p>
         ) : error ? (
-          <p className='py-8 text-center text-red-500'>{error}</p>
+          <p className='py-8 text-center text-red-500 dark:text-red-400'>
+            {error}
+          </p>
         ) : recipes.length === 0 ? (
-          <p className='py-8 text-center text-gray-500'>
+          <p className='py-8 text-center text-gray-500 dark:text-gray-400'>
             Geen recepten gevonden.
           </p>
         ) : (
@@ -37,21 +40,7 @@ export default function RecipeComponent({
           </div>
         )}
 
-        {user ? (
-          <p className='mt-4 text-center'>
-            Wil je graag zelf eentje publiceren?{' '}
-            <Link href='/recipes' className='text-green-700 underline'>
-              Klik dan hier!
-            </Link>
-          </p>
-        ) : (
-          <p className='mt-4 text-center'>
-            <Link href='/login' className='text-green-700 underline'>
-              Log in
-            </Link>{' '}
-            om zelf een recept te publiceren.
-          </p>
-        )}
+        <RecipeNavigator user={user} />
       </div>
     </article>
   );
