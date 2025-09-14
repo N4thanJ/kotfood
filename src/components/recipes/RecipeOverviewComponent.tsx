@@ -10,6 +10,7 @@ interface Props {
   user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
   isLoading: boolean;
   error: string | null;
+  personal: boolean;
 }
 
 export function getAllCategories(): Category[] {
@@ -25,6 +26,7 @@ export default function RecipeOverviewComponent({
   user,
   isLoading,
   error,
+  personal,
 }: Props) {
   const [category, setCategory] = useState<Category | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
@@ -52,7 +54,7 @@ export default function RecipeOverviewComponent({
       <section className='flex h-[calc(100vh-15px)] items-center justify-center px-8 pt-20'>
         <div className='text-center'>
           <div className='mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-green-200 border-t-green-600'></div>
-          <p className='text-gray-600'>Recepten laden...</p>
+          <p className='text-gray-600'>Recepten worden laden...</p>
         </div>
       </section>
     );
@@ -81,9 +83,13 @@ export default function RecipeOverviewComponent({
         setCategory={setCategory}
         setDifficulty={setDifficulty}
       />
+
       {/* Recipe list */}
       <article className='flex flex-1 flex-col'>
-        <h2 className='mb-4 text-2xl font-extrabold'>Alle Recepten</h2>
+        <h2 className='mb-4 text-2xl font-extrabold'>
+          {!personal ? 'Alle Recepten' : 'Mijn recepten'}
+        </h2>
+
         <div className='flex h-full min-h-0 flex-1 flex-col'>
           {/* Scrollable recipe grid */}
           <div className='min-h-0 flex-1 overflow-auto'>

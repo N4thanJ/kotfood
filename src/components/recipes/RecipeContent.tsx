@@ -1,13 +1,13 @@
-import { ReactNode } from 'react';
+import DOMPurify from 'dompurify';
 
-interface Props {
-  content?: ReactNode;
+interface RecipeContentProps {
+  content: string;
 }
 
-export default function RecipeContent({ content }: Props) {
+export default function RecipeContent({ content }: RecipeContentProps) {
   return (
-    <article>
-      <p>{content}</p>
+    <article className={`recipe-content`}>
+      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
     </article>
   );
 }

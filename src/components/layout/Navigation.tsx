@@ -48,13 +48,30 @@ export default function Navigation({ user, darkerText }: Props) {
           <ul
             className={`hidden space-x-8 pr-6 font-medium ${isAtTop && !darkerText ? 'text-white' : ''} md:flex`}
           >
-            <li>
-              <Link
-                href='/recipes'
-                className='text-xl font-semibold transition-colors hover:underline'
-              >
-                Recepten
+            <li className='group relative'>
+              <Link href={'/recipes'}>
+                <span className='cursor-pointer text-xl font-semibold transition-colors hover:underline focus:outline-none'>
+                  Recepten
+                </span>
               </Link>
+              <ul className='absolute left-0 z-10 hidden min-w-[160px] overflow-hidden rounded-md bg-white shadow-lg group-hover:block group-focus:block'>
+                <li>
+                  <Link
+                    href='/recipes'
+                    className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
+                  >
+                    Alle recepten
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/recipes/mine'
+                    className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
+                  >
+                    Mijn recepten
+                  </Link>
+                </li>
+              </ul>
             </li>
 
             {user && (

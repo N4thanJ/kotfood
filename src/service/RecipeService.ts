@@ -40,6 +40,26 @@ const getRecipeByID = async (id: string) => {
   }
 };
 
+const getMyRecipes = async (id: string) => {
+  try {
+    const res = await fetch(`/api/recipes?mine=true`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const resData = await res.json();
+
+    if (!res.ok) {
+      throw new Error(resData.error || 'Getting your recipes failed');
+    }
+
+    return resData;
+  } catch (err) {
+    console.error('Getting your recipes failed:', err);
+    throw err;
+  }
+};
+
 const createRecipe = async (url: string, { arg }: { arg: RecipeBody }) => {
   try {
     const res = await fetch(url, {
@@ -60,6 +80,6 @@ const createRecipe = async (url: string, { arg }: { arg: RecipeBody }) => {
   }
 };
 
-const RecipeService = { getRecipes, getRecipeByID, createRecipe };
+const RecipeService = { getRecipes, getRecipeByID, getMyRecipes, createRecipe };
 
 export default RecipeService;

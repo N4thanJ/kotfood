@@ -18,6 +18,7 @@ export type Recipe = {
   name: string;
   description: string;
   imageUrl: string;
+  content: string;
   category?: Category;
   difficulty?: Difficulty;
   createdBy: User;

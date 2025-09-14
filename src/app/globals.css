@@ -36,3 +36,53 @@ body {
 .animate-blink {
   animation: blink 1s infinite;
 }
+
+.recipe-content {
+  @apply mx-auto max-w-full text-gray-800;
+}
+
+/* Headings */
+.recipe-content h1 {
+  @apply mt-6 mb-4 text-xl font-bold;
+}
+.recipe-content h2 {
+  @apply mt-5 mb-3 text-lg font-semibold;
+}
+.recipe-content h3 {
+  @apply mt-4 mb-2 text-sm font-semibold;
+}
+
+/* Paragraphs */
+.recipe-content p {
+  @apply mb-4 leading-relaxed;
+}
+
+/* Lists */
+.recipe-content ul {
+  @apply mb-4 list-inside list-disc;
+}
+.recipe-content ol {
+  @apply mb-4 list-inside list-decimal;
+}
+.recipe-content li {
+  @apply mb-2;
+}
+
+/* Blockquotes */
+.recipe-content blockquote {
+  @apply my-4 border-l-4 border-gray-300 pl-4 text-gray-600 italic;
+}
+
+/* Images */
+.recipe-content img {
+  @apply my-4 max-w-full rounded-lg;
+}
+
+/* Horizontal rule */
+.recipe-content hr {
+  @apply my-6 border-t border-gray-300;
+}
+
+.ck.ck-editor {
+  @apply overflow-hidden! rounded-lg! border! border-gray-300!;
+}

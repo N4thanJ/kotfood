@@ -7,32 +7,43 @@ import { prisma } from '@/lib/prisma';
 interface CustomJwtPayload extends jwt.JwtPayload {
   role: string;
 }
+
 export async function GET(req: NextRequest) {
   try {
     const token = (await cookies()).get('token')?.value;
+    const { searchParams } = new URL(req.url);
+
+    const personalFlag = searchParams.get('mine');
+
+    // 🔓 Niet ingelogd → enkel actieve recepten
+    if (!token) {
+      const recipes = await prisma.recipe.findMany({
+        where: { active: true },
+      });
+      return NextResponse.json(recipes, { status: 200 });
+    }
+
+    // 🔑 Ingelogd → decode token
+    const decodedToken = jwt.verify(
+      token,
+      process.env.JWT_SECRET!,
+    ) as CustomJwtPayload;
 
     let recipes;
 
-    if (!token) {
-      recipes = await prisma.recipe.findMany({ where: { active: true } });
+    if (personalFlag) {
+      // Mijn recepten
+      recipes = await prisma.recipe.findMany({
+        where: { userId: decodedToken.id },
+      });
+    } else if (decodedToken.role === 'Admin') {
+      // alle recepten
+      recipes = await prisma.recipe.findMany();
     } else {
-      const decodedToken = jwt.verify(
-        token,
-        process.env.JWT_SECRET!,
-      ) as CustomJwtPayload;
-
-      const { searchParams } = new URL(req.url);
-      const inactiveFlag = searchParams.get('inactive');
-
-      if (decodedToken.role === 'Admin') {
-        if (inactiveFlag) {
-          recipes = await prisma.recipe.findMany({ where: { active: false } });
-        } else {
-          recipes = await prisma.recipe.findMany();
-        }
-      } else {
-        recipes = await prisma.recipe.findMany({ where: { active: true } });
-      }
+      // enkel actieve recepten
+      recipes = await prisma.recipe.findMany({
+        where: { active: true },
+      });
     }
 
     return NextResponse.json(recipes, { status: 200 });

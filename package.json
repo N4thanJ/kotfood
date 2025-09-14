@@ -11,9 +11,12 @@
     "prisma-seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "@ckeditor/ckeditor5-react": "^11.0.0",
     "@prisma/client": "^6.15.0",
     "bcrypt": "^6.0.0",
     "cookie": "^1.0.2",
+    "dompurify": "^3.2.6",
     "framer-motion": "^12.23.12",
     "jose": "^6.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -33,7 +36,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.1",
-    "@types/react": "^19",
+    "@types/react": "^19.1.13",
     "@types/react-dom": "^19",
     "daisyui": "^5.1.8",
     "eslint": "^9",

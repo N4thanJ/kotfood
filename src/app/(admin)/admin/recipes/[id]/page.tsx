@@ -4,7 +4,7 @@ import RecipePageComponent from '@/components/recipes/RecipePageComponent';
 import { useAuth } from '@/contexts/AuthContext';
 import RecipeService from '@/service/RecipeService';
 import { useParams } from 'next/navigation';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 export default function RecipeReview() {
   const { user } = useAuth();
@@ -21,8 +21,34 @@ export default function RecipeReview() {
     ([url, recipeId]) => fetcher(url, recipeId),
   );
 
+  const onSave = (recipeId: string) => async (updatedContent: string) => {
+    try {
+      const res = await fetch(`/api/recipes/${recipeId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: updatedContent }),
+        credentials: 'include',
+      });
+
+      if (!res.ok) throw new Error('Failed to save recipe');
+
+      mutate(`/api/recipes/${recipeId}`);
+      alert('Recipe updated!');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to save recipe');
+    }
+  };
+
   if (isLoading) {
-    return;
+    return (
+      <section className='flex h-[calc(100vh-15px)] items-center justify-center px-8 pt-20'>
+        <div className='text-center'>
+          <div className='mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-green-200 border-t-green-600'></div>
+          <p className='text-gray-600'>Recept wordt geladen...</p>
+        </div>
+      </section>
+    );
   }
 
   if (error) {
@@ -34,6 +60,8 @@ export default function RecipeReview() {
   }
 
   return (
-    <main>{data && <RecipePageComponent recipe={data} user={user} />}</main>
+    <main>
+      {data && <RecipePageComponent recipe={data} user={user} adminPreviewer />}
+    </main>
   );
 }

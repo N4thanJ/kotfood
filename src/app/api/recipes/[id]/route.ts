@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split('/').pop();
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const id = url.pathname.split('/').pop();
@@ -72,5 +72,19 @@ export async function DELETE(request: Request) {
       { message: 'Internal server error' },
       { status: 500 },
     );
+  }
+}
+
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const { content } = await req.json();
+    const updatedRecipe = await prisma.recipe.update({
+      where: { id: params.id },
+      data: { content },
+    });
+    return NextResponse.json(updatedRecipe);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: 'Failed to update content' }, { status: 500 });
   }
 }
