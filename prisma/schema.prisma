@@ -10,7 +10,27 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("KOTFOOD_DATABASE_URL")
+}
+
+enum Category {
+  Ontbijt
+  Lunch
+  Diner
+  Dessert
+  Snack
+  Drankje
+}
+
+enum Difficulty {
+  Makkelijk
+  Gemiddeld
+  Moeilijk
+}
+
+enum Role {
+  User
+  Admin
 }
 
 model User {
@@ -20,4 +40,24 @@ model User {
   email     String   @unique
   username  String
   password  String
+  imageUrl  String?
+  bio       String?
+  role      Role     @default(User)
+  recipes   Recipe[]
+}
+
+model Recipe {
+  id            String     @id @default(uuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  name          String
+  description   String
+  imageUrl      String
+  category      Category   @default(Dessert)
+  difficulty    Difficulty @default(Makkelijk)
+  content       String?
+  active        Boolean    @default(false)
+  reviewComment String?
+  createdBy     User?      @relation(fields: [userId], references: [id])
+  userId        String?
 }

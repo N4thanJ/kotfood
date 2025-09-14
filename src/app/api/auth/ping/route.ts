@@ -1,8 +1,8 @@
 // app/api/auth/ping/route.ts
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/lib/prisma';
 import cookie from 'cookie';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(req: Request) {
   const cookies = req.headers.get('cookie') || '';
@@ -26,6 +26,7 @@ export async function GET(req: Request) {
         id: true,
         username: true,
         email: true,
+        role: true,
       },
     });
 

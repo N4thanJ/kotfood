@@ -46,7 +46,7 @@ export default function RegisterFormComponent() {
     try {
       registerSchema.parse({ email, username, password });
       return {};
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof z.ZodError) {
         const fieldErrors: {
           email?: string;
@@ -91,97 +91,90 @@ export default function RegisterFormComponent() {
 
       // Redirect to the default page after registration
       router.push('/login');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Registration error:', err);
-      alert(err.message || 'Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form className='flex flex-col gap-4 max-w-md w-full bg-white dark:bg-gray-800 p-12 rounded-lg shadow-lg'>
+    <form className='flex w-full max-w-md flex-col gap-4 rounded-lg bg-white p-12 shadow-lg'>
       {/* Email */}
-      <div className='flex flex-col relative'>
+      <div className='relative flex flex-col'>
         <label htmlFor='email' className='sr-only'>
           Email
         </label>
         <div className='relative'>
           <Mail
-            className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
             size={20}
           />
           <input
             type='email'
             id='email'
             placeholder='Email'
-            className={`pl-10 pr-4 py-3 w-full rounded-full border ${
-              emailError
-                ? 'border-red-500'
-                : 'border-gray-300 dark:border-gray-600'
-            } bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-400`}
+            className={`w-full rounded-full border py-3 pr-4 pl-10 ${
+              emailError ? 'border-red-500' : 'border-gray-300'
+            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         {emailError && (
-          <p className='text-red-500 text-sm mt-1'>{emailError}</p>
+          <p className='mt-1 text-sm text-red-500'>{emailError}</p>
         )}
       </div>
 
       {/* Username */}
-      <div className='flex flex-col relative'>
+      <div className='relative flex flex-col'>
         <label htmlFor='username' className='sr-only'>
           Username
         </label>
         <div className='relative'>
           <User
-            className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
             size={20}
           />
           <input
             type='text'
             id='username'
             placeholder='Username'
-            className={`pl-10 pr-4 py-3 w-full rounded-full border ${
-              usernameError
-                ? 'border-red-500'
-                : 'border-gray-300 dark:border-gray-600'
-            } bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-400`}
+            className={`w-full rounded-full border py-3 pr-4 pl-10 ${
+              usernameError ? 'border-red-500' : 'border-gray-300'
+            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         {usernameError && (
-          <p className='text-red-500 text-sm mt-1'>{usernameError}</p>
+          <p className='mt-1 text-sm text-red-500'>{usernameError}</p>
         )}
       </div>
 
       {/* Password */}
-      <div className='flex flex-col relative'>
+      <div className='relative flex flex-col'>
         <label htmlFor='password' className='sr-only'>
           Password
         </label>
         <div className='relative'>
           <Lock
-            className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
             size={20}
           />
           <input
             type='password'
             id='password'
             placeholder='Password'
-            className={`pl-10 pr-4 py-3 w-full rounded-full border ${
-              passwordError
-                ? 'border-red-500'
-                : 'border-gray-300 dark:border-gray-600'
-            } bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-400`}
+            className={`w-full rounded-full border py-3 pr-4 pl-10 ${
+              passwordError ? 'border-red-500' : 'border-gray-300'
+            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         {passwordError && (
-          <p className='text-red-500 text-sm mt-1'>{passwordError}</p>
+          <p className='mt-1 text-sm text-red-500'>{passwordError}</p>
         )}
       </div>
 
@@ -190,8 +183,8 @@ export default function RegisterFormComponent() {
         type='submit'
         onClick={handleRegister}
         disabled={isLoading}
-        className={`mt-2 px-4 py-3 cursor-pointer bg-lime-500 dark:bg-lime-600 text-white rounded-full hover:bg-lime-600 dark:hover:bg-lime-500 transition-colors ${
-          isLoading ? 'opacity-60 cursor-not-allowed' : ''
+        className={`hover:bg-lime-600:bg-lime-500 mt-2 cursor-pointer rounded-full bg-lime-500 px-4 py-3 text-white transition-colors ${
+          isLoading ? 'cursor-not-allowed opacity-60' : ''
         }`}
       >
         {isLoading ? 'Registering...' : 'Register'}

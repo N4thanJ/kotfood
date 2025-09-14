@@ -1,11 +1,8 @@
-import { Roboto, Londrina_Solid } from 'next/font/google';
+import { Nunito } from 'next/font/google';
+import { Playfair_Display } from 'next/font/google';
 
-export const roboto = Roboto({
-  variable: '--font-roboto',
+export const nunito = Nunito({
   subsets: ['latin'],
 });
 
-export const londrina = Londrina_Solid({
-  subsets: ['latin'],
-  weight: '400',
-});
+export const playfair = Playfair_Display();

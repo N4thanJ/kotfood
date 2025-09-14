@@ -1,26 +1,22 @@
 import LoginFormComponent from '@/components/auth/LoginFormComponent';
-import { londrina } from '../../fonts';
+import Link from 'next/link';
 
 export default function Login() {
   return (
-    <section className='min-h-screen flex flex-col p-8 bg-gray-50 dark:bg-gray-900'>
+    <section className='flex min-h-screen flex-col bg-gray-50 p-8'>
       {/* Logo top-left */}
       <div className='mb-12'>
-        <h1
-          className={`${londrina.className} text-5xl text-lime-500 logo-text`}
-        >
-          KotFood
-        </h1>
+        <Link href='/'>
+          <h1 className={`text-4xl font-black`}>KotFood</h1>
+        </Link>
       </div>
 
       {/* Login content */}
-      <div className='flex flex-col items-center w-full'>
+      <div className='flex w-full flex-col items-center'>
         {/* Heading and description */}
-        <div className='text-center mb-6'>
-          <h2 className='text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100'>
-            Login
-          </h2>
-          <p className='text-gray-600 dark:text-gray-300'>
+        <div className='mb-6 text-center'>
+          <h2 className='mb-2 text-3xl font-bold text-gray-900'>Login</h2>
+          <p className='text-gray-600'>
             Log in om toegang te krijgen tot je opgeslagen recepten en je
             persoonlijke instellingen.
           </p>

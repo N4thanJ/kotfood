@@ -1,11 +1,16 @@
 import { CircleUser } from 'lucide-react';
 import Link from 'next/link';
 
-export default function LoginButton() {
+interface Props {
+  isAtTop: boolean;
+  darkerText: boolean;
+}
+
+export default function LoginButton({ isAtTop, darkerText }: Props) {
   return (
     <Link
       href='/login'
-      className='flex items-center gap-2 text-xl hover:text-green-200 cursor-pointer transition'
+      className={`flex cursor-pointer items-center gap-2 text-xl ${isAtTop && !darkerText ? 'text-white' : ''} transition hover:text-green-200`}
     >
       <CircleUser size={28} />
     </Link>

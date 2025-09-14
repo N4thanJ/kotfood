@@ -1,7 +1,12 @@
 import UserService from '@/service/UserService';
 import { LogOut } from 'lucide-react';
 
-export default function LogoutButton() {
+interface Props {
+  isAtTop: boolean;
+  darkerText: boolean;
+}
+
+export default function LogoutButton({ isAtTop, darkerText }: Props) {
   const handleLogout = async () => {
     try {
       const res = await UserService.logout();
@@ -18,7 +23,7 @@ export default function LogoutButton() {
 
   return (
     <span
-      className='flex items-center gap-2 text-xl hover:text-red-500 cursor-pointer transition'
+      className={`flex cursor-pointer items-center gap-2 text-xl ${isAtTop && !darkerText ? 'text-white' : ''} transition hover:text-red-500`}
       onClick={handleLogout}
     >
       <LogOut size={28} />
