@@ -23,6 +23,7 @@ export default function Recipes() {
         user={user}
         isLoading={isLoading}
         error={error}
+        personal={false}
       />
     </main>
   );

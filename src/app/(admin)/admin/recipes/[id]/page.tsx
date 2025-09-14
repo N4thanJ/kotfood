@@ -4,7 +4,7 @@ import RecipePageComponent from '@/components/recipes/RecipePageComponent';
 import { useAuth } from '@/contexts/AuthContext';
 import RecipeService from '@/service/RecipeService';
 import { useParams } from 'next/navigation';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
 export default function RecipeReview() {
   const { user } = useAuth();
@@ -20,25 +20,6 @@ export default function RecipeReview() {
     id ? [`/api/recipes/${id}`, id] : null,
     ([url, recipeId]) => fetcher(url, recipeId),
   );
-
-  const onSave = (recipeId: string) => async (updatedContent: string) => {
-    try {
-      const res = await fetch(`/api/recipes/${recipeId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: updatedContent }),
-        credentials: 'include',
-      });
-
-      if (!res.ok) throw new Error('Failed to save recipe');
-
-      mutate(`/api/recipes/${recipeId}`);
-      alert('Recipe updated!');
-    } catch (err) {
-      console.error(err);
-      alert('Failed to save recipe');
-    }
-  };
 
   if (isLoading) {
     return (

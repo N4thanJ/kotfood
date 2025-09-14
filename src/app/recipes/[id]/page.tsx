@@ -12,25 +12,6 @@ export default function Recipe() {
   const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
 
-  const onSave = (recipeId: string) => async (updatedContent: string) => {
-    try {
-      const res = await fetch(`/api/recipes/${recipeId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: updatedContent }),
-        credentials: 'include',
-      });
-
-      if (!res.ok) throw new Error('Failed to save recipe');
-
-      mutate(`/api/recipes/${recipeId}`);
-      alert('Recipe updated!');
-    } catch (err) {
-      console.error(err);
-      alert('Failed to save recipe');
-    }
-  };
-
   // Fetcher voor single recipe
   const fetcher = async (recipeId: string) => {
     return RecipeService.getRecipeByID(recipeId);
@@ -40,7 +21,6 @@ export default function Recipe() {
     data: recipe,
     isLoading,
     error,
-    mutate,
   } = useSWR(id ? `/api/recipes/${id}` : null, () => fetcher(id!));
 
   if (isLoading) {

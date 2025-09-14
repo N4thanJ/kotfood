@@ -40,7 +40,7 @@ const getRecipeByID = async (id: string) => {
   }
 };
 
-const getMyRecipes = async (id: string) => {
+const getMyRecipes = async () => {
   try {
     const res = await fetch(`/api/recipes?mine=true`, {
       method: 'GET',

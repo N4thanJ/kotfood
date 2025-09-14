@@ -17,11 +17,9 @@ export default function RecipeContentEditor({
 
   return (
     <div className='flex flex-col gap-4'>
-      {/* Add top padding to account for fixed navigation */}
       <div className='pt-24'>
-        {' '}
-        {/* 24 = 6rem, slightly more than navigation height of 5rem (h-20) */}
         <CKEditor
+          // eslint-disable-next-line
           editor={ClassicEditor as any}
           data={initialContent}
           onChange={(event, editor) => {

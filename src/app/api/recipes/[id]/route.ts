@@ -75,16 +75,26 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      throw new Error('ID is undefined');
+    }
+
     const { content } = await req.json();
     const updatedRecipe = await prisma.recipe.update({
-      where: { id: params.id },
+      where: { id },
       data: { content },
     });
     return NextResponse.json(updatedRecipe);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: 'Failed to update content' }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Failed to update content' },
+      { status: 500 },
+    );
   }
 }
