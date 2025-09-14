@@ -33,7 +33,7 @@ export default function Home() {
       />
 
       <PageHeroComponent
-        title={'Lekkere recepten voor op jou kot'}
+        title={'Lekkere recepten voor op jouw kot'}
         content={
           <>
             Basisrecepten, snelle maaltijden of zoete dessertjes – bij KotFood
