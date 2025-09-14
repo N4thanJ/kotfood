@@ -38,8 +38,8 @@ export default function Recipe() {
   return (
     <main>
       <Navigation user={user} darkerText />
-      {data && <RecipePageComponent recipe={data} />}
-      <Footer user={user} />
+      {data && <RecipePageComponent recipe={data} user={user} />}
+      <Footer />
     </main>
   );
 }

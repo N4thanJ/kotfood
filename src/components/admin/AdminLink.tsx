@@ -11,9 +11,7 @@ export default function AdminLink({ isOpen, icon: Icon, text, href }: Props) {
   return (
     <Link
       href={href}
-      className={`flex items-center rounded-md py-2 text-sm font-medium text-gray-700 hover:bg-green-100 hover:text-green-700 dark:text-gray-300 dark:hover:bg-green-800 ${
-        isOpen ? 'gap-3 px-3' : 'justify-center px-2'
-      }`}
+      className={`hover:text-green-700:bg-green-800:text-green-400 flex items-center rounded-md py-2 text-sm font-medium text-gray-700 hover:bg-green-100 ${isOpen ? 'gap-3 px-3' : 'justify-center px-2'}`}
       title={!isOpen ? text : undefined}
     >
       <Icon size={20} className='flex-shrink-0' />

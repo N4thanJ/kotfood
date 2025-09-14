@@ -11,16 +11,15 @@ export default function RecipeNavigator({ user }: Props) {
       {user ? (
         <p className='mt-4 text-center'>
           Wil je graag zelf eentje publiceren?{' '}
-          <Link href='/new' className='underline dark:text-green-300'>
-            <span className='text-green-700'>Klik dan hier!</span>
+          <Link href='/new' className='hover:underline'>
+            <span className='text-secondary hover:text-primary'>
+              Klik dan hier!
+            </span>
           </Link>
         </p>
       ) : (
         <p className='mt-4 text-center'>
-          <Link
-            href='/login'
-            className='text-green-700 underline dark:text-green-300'
-          >
+          <Link href='/login' className='text-green-700 underline'>
             <span>Log in</span>
           </Link>{' '}
           om zelf een recept te publiceren.

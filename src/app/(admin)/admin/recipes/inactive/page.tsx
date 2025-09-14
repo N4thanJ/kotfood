@@ -1,9 +1,10 @@
 'use client';
 
+import ControlsOverview from '@/components/layout/ControlsOverview';
 import RecipeOverviewCard from '@/components/recipes/RecipeOverviewCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { Recipe } from '@/types';
-import Link from 'next/link';
+import { useState } from 'react';
 import useSWR from 'swr';
 
 export default function Innactive() {
@@ -13,6 +14,16 @@ export default function Innactive() {
     '/api/recipes?inactive=true',
     fetcher,
   );
+
+  const PAGE_SIZE = 8;
+  const [page, setPage] = useState(1);
+
+  const paginatedRecipes = recipes.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE,
+  );
+
+  const totalPages = Math.ceil(recipes.length / PAGE_SIZE);
 
   if (error) {
     <div className='space-y-4'>
@@ -24,25 +35,32 @@ export default function Innactive() {
     <div className='space-y-4'>
       {/* Header with Add button */}
       <div className='flex items-center gap-4'>
-        <h1 className='text-2xl font-bold'>Alle Recepten</h1>
-        <Link
-          href='/new'
-          className='rounded-full bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700'
-        >
-          Nieuw recept
-        </Link>
+        <h1 className='text-3xl font-black'>Alle Inactieve Recepten</h1>
       </div>
 
       {/* Recipes grid */}
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-        {recipes.length === 0 ? (
-          <div>No recipes found</div>
+        {paginatedRecipes.length === 0 ? (
+          <div>Geen inactieve recepten gevonden</div>
         ) : (
-          recipes.map((recipe) => (
-            <RecipeOverviewCard key={recipe.id} recipe={recipe} user={user} />
+          paginatedRecipes.map((recipe) => (
+            <RecipeOverviewCard
+              key={recipe.id}
+              recipe={recipe}
+              user={user}
+              adminPage={true}
+            />
           ))
         )}
       </div>
+
+      <ControlsOverview
+        recipes={recipes}
+        PAGE_SIZE={PAGE_SIZE}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

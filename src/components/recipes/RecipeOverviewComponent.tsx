@@ -52,7 +52,7 @@ export default function RecipeOverviewComponent({
       <section className='flex h-[calc(100vh-15px)] items-center justify-center px-8 pt-20'>
         <div className='text-center'>
           <div className='mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-green-200 border-t-green-600'></div>
-          <p className='text-gray-600 dark:text-gray-400'>Recepten laden...</p>
+          <p className='text-gray-600'>Recepten laden...</p>
         </div>
       </section>
     );
@@ -62,7 +62,7 @@ export default function RecipeOverviewComponent({
     return (
       <section className='flex h-[calc(100vh-15px)] items-center justify-center px-8 pt-20'>
         <div className='text-center'>
-          <p className='text-red-600 dark:text-red-400'>
+          <p className='text-red-600'>
             Fout bij het laden van recepten: {error}
           </p>
         </div>
@@ -82,22 +82,25 @@ export default function RecipeOverviewComponent({
         setDifficulty={setDifficulty}
       />
       {/* Recipe list */}
-      <article className='flex flex-1 flex-col rounded-xl bg-green-50 p-8 shadow-sm dark:bg-green-900'>
-        <h2 className='mb-4 text-2xl font-extrabold text-green-800 dark:text-green-200'>
-          Alle recepten
-        </h2>
+      <article className='flex flex-1 flex-col'>
+        <h2 className='mb-4 text-2xl font-extrabold'>Alle Recepten</h2>
         <div className='flex h-full min-h-0 flex-1 flex-col'>
           {/* Scrollable recipe grid */}
           <div className='min-h-0 flex-1 overflow-auto'>
             {paginatedRecipes.length > 0 ? (
               <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {paginatedRecipes.map((recipe) => (
-                  <RecipeOverviewCard key={recipe.id} recipe={recipe} />
+                  <RecipeOverviewCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    user={user}
+                    adminPage={false}
+                  />
                 ))}
               </div>
             ) : (
               <div className='flex h-full items-center justify-center'>
-                <p className='text-gray-500 dark:text-gray-400'>
+                <p className='text-gray-500'>
                   Geen recepten gevonden met de huidige filters.
                 </p>
               </div>
@@ -106,22 +109,22 @@ export default function RecipeOverviewComponent({
 
           {/* Static pagination at bottom */}
           {filteredRecipes.length > PAGE_SIZE && (
-            <div className='mt-4 flex flex-shrink-0 items-center justify-center gap-4 pt-4 dark:border-green-700'>
+            <div className='mt-4 flex flex-shrink-0 items-center justify-center gap-4 pt-4'>
               <button
                 disabled={page === 1}
                 onClick={() => setPage((p) => p - 1)}
-                className='rounded-md bg-gray-200 px-3 py-1 text-sm transition-colors hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600'
+                className='disabled:opacity-50:bg-gray-600 rounded-md bg-gray-200 px-3 py-1 text-sm transition-colors hover:bg-gray-300'
               >
                 Vorige
               </button>
-              <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <span className='text-sm font-medium text-gray-700'>
                 Pagina {page} van{' '}
                 {Math.ceil(filteredRecipes.length / PAGE_SIZE)}
               </span>
               <button
                 disabled={page * PAGE_SIZE >= filteredRecipes.length}
                 onClick={() => setPage((p) => p + 1)}
-                className='rounded-md bg-gray-200 px-3 py-1 text-sm transition-colors hover:bg-gray-300 disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600'
+                className='disabled:opacity-50:bg-gray-600 rounded-md bg-gray-200 px-3 py-1 text-sm transition-colors hover:bg-gray-300'
               >
                 Volgende
               </button>

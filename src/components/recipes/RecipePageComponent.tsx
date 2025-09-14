@@ -21,7 +21,7 @@ export default function RecipePageComponent({ recipe, user }: Props) {
       {recipe.createdBy && (
         <div className='flex-[0.3]'>
           <RecipeCreator user={recipe.createdBy} />
-          {user?.role === 'Admin' && <Reviewer recipe={recipe} admin={user} />}
+          {user?.role === 'Admin' && <Reviewer recipe={recipe} />}
         </div>
       )}
     </section>

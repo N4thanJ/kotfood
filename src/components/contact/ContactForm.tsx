@@ -78,7 +78,7 @@ export default function ContactForm() {
       </h2>
       <form
         onSubmit={handleSubmit}
-        className='mx-auto flex max-w-[700px] flex-col gap-4 rounded-lg bg-white p-8 shadow-md dark:bg-gray-800'
+        className='mx-auto flex max-w-[800px] flex-col gap-4'
       >
         {/* Name */}
         <div className='relative flex flex-col'>
@@ -87,7 +87,7 @@ export default function ContactForm() {
           </label>
           <div className='relative'>
             <User
-              className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+              className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
               size={20}
             />
             <input
@@ -95,10 +95,8 @@ export default function ContactForm() {
               id='name'
               placeholder='Your Name'
               className={`w-full rounded-full border py-3 pr-4 pl-10 ${
-                errors.name
-                  ? 'border-red-500'
-                  : 'border-gray-300 dark:border-gray-600'
-              } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none dark:bg-gray-700 dark:text-gray-100`}
+                errors.name ? 'border-red-500' : 'border-gray-300'
+              } bg-gray-200 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -117,7 +115,7 @@ export default function ContactForm() {
           </label>
           <div className='relative'>
             <Mail
-              className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+              className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
               size={20}
             />
             <input
@@ -125,10 +123,8 @@ export default function ContactForm() {
               id='email'
               placeholder='Your Email'
               className={`w-full rounded-full border py-3 pr-4 pl-10 ${
-                errors.email
-                  ? 'border-red-500'
-                  : 'border-gray-300 dark:border-gray-600'
-              } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none dark:bg-gray-700 dark:text-gray-100`}
+                errors.email ? 'border-red-500' : 'border-gray-300'
+              } bg-gray-200 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
@@ -147,7 +143,7 @@ export default function ContactForm() {
           </label>
           <div className='relative'>
             <MessageSquare
-              className='absolute top-6.5 left-3 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+              className='absolute top-6.5 left-3 -translate-y-1/2 text-gray-400'
               size={20}
             />
             <textarea
@@ -155,10 +151,8 @@ export default function ContactForm() {
               placeholder='Your Message'
               rows={5}
               className={`w-full rounded-xl border py-3 pr-4 pl-10 ${
-                errors.message
-                  ? 'border-red-500'
-                  : 'border-gray-300 dark:border-gray-600'
-              } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none dark:bg-gray-700 dark:text-gray-100`}
+                errors.message ? 'border-red-500' : 'border-gray-300'
+              } bg-gray-200 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
               value={formData.message}
               onChange={(e) =>
                 setFormData({ ...formData, message: e.target.value })
@@ -174,7 +168,7 @@ export default function ContactForm() {
         <button
           type='submit'
           disabled={isLoading}
-          className={`mt-2 cursor-pointer rounded-full bg-lime-500 px-4 py-3 text-white transition-colors hover:bg-lime-600 dark:bg-lime-600 dark:hover:bg-lime-500 ${
+          className={`bg-secondary hover:bg-primary mt-2 cursor-pointer rounded-full px-4 py-3 text-white transition-colors ${
             isLoading ? 'cursor-not-allowed opacity-50' : ''
           }`}
         >

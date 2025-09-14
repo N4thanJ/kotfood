@@ -1,13 +1,7 @@
-import { User } from '@/types';
-
-interface Props {
-  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
-}
-
-export default function Footer({ user }: Props) {
+export default function Footer() {
   return (
     <footer className='dark:bg-background bg-foreground border-border'>
-      <div className='text-background dark:text-foreground mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-4 text-sm md:flex-row'>
+      <div className='text-background mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-4 text-sm md:flex-row'>
         <p>&copy; {new Date().getFullYear()} KotFood. All rights reserved.</p>
         <p>
           Designed by{' '}

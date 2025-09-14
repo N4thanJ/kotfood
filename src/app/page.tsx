@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <Navigation user={user} darkerText={false} />
       <Main user={user} />
-      <Footer user={user} />
+      <Footer />
     </>
   );
 }

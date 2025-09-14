@@ -1,6 +1,5 @@
 'use client';
-import Footer from '@/components/layout/Footer';
-import Navigation from '@/components/layout/Navigation';
+
 import RecipePageComponent from '@/components/recipes/RecipePageComponent';
 import { useAuth } from '@/contexts/AuthContext';
 import RecipeService from '@/service/RecipeService';

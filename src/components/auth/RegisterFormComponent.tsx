@@ -99,7 +99,7 @@ export default function RegisterFormComponent() {
   };
 
   return (
-    <form className='flex w-full max-w-md flex-col gap-4 rounded-lg bg-white p-12 shadow-lg dark:bg-gray-800'>
+    <form className='flex w-full max-w-md flex-col gap-4 rounded-lg bg-white p-12 shadow-lg'>
       {/* Email */}
       <div className='relative flex flex-col'>
         <label htmlFor='email' className='sr-only'>
@@ -107,7 +107,7 @@ export default function RegisterFormComponent() {
         </label>
         <div className='relative'>
           <Mail
-            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
             size={20}
           />
           <input
@@ -115,10 +115,8 @@ export default function RegisterFormComponent() {
             id='email'
             placeholder='Email'
             className={`w-full rounded-full border py-3 pr-4 pl-10 ${
-              emailError
-                ? 'border-red-500'
-                : 'border-gray-300 dark:border-gray-600'
-            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none dark:bg-gray-700 dark:text-gray-100`}
+              emailError ? 'border-red-500' : 'border-gray-300'
+            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -135,7 +133,7 @@ export default function RegisterFormComponent() {
         </label>
         <div className='relative'>
           <User
-            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
             size={20}
           />
           <input
@@ -143,10 +141,8 @@ export default function RegisterFormComponent() {
             id='username'
             placeholder='Username'
             className={`w-full rounded-full border py-3 pr-4 pl-10 ${
-              usernameError
-                ? 'border-red-500'
-                : 'border-gray-300 dark:border-gray-600'
-            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none dark:bg-gray-700 dark:text-gray-100`}
+              usernameError ? 'border-red-500' : 'border-gray-300'
+            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -163,7 +159,7 @@ export default function RegisterFormComponent() {
         </label>
         <div className='relative'>
           <Lock
-            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400 dark:text-gray-300'
+            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
             size={20}
           />
           <input
@@ -171,10 +167,8 @@ export default function RegisterFormComponent() {
             id='password'
             placeholder='Password'
             className={`w-full rounded-full border py-3 pr-4 pl-10 ${
-              passwordError
-                ? 'border-red-500'
-                : 'border-gray-300 dark:border-gray-600'
-            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none dark:bg-gray-700 dark:text-gray-100`}
+              passwordError ? 'border-red-500' : 'border-gray-300'
+            } bg-gray-100 text-gray-900 focus:ring-2 focus:ring-lime-400 focus:outline-none`}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -189,7 +183,7 @@ export default function RegisterFormComponent() {
         type='submit'
         onClick={handleRegister}
         disabled={isLoading}
-        className={`mt-2 cursor-pointer rounded-full bg-lime-500 px-4 py-3 text-white transition-colors hover:bg-lime-600 dark:bg-lime-600 dark:hover:bg-lime-500 ${
+        className={`hover:bg-lime-600:bg-lime-500 mt-2 cursor-pointer rounded-full bg-lime-500 px-4 py-3 text-white transition-colors ${
           isLoading ? 'cursor-not-allowed opacity-60' : ''
         }`}
       >

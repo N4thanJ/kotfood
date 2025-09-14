@@ -2,62 +2,65 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Recipe, User } from '@/types';
+import type { Recipe } from '@/types';
 import { mutate } from 'swr';
+import { useRouter } from 'next/navigation';
 
 interface ReviewerProps {
   recipe: Recipe;
-  admin: Pick<User, 'id' | 'email' | 'username' | 'role'>;
 }
 
-export default function Reviewer({ recipe, admin }: ReviewerProps) {
+export default function Reviewer({ recipe }: ReviewerProps) {
   const [comment, setComment] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
-  const handleApprove = async () => {
-    if (!confirm('Are you sure you want to approve this recipe?')) return;
+  const handleEnable = async () => {
+    if (!confirm('Are you sure you want to enable this recipe?')) return;
 
     try {
       const res = await fetch(`/api/recipes`, {
         method: 'PATCH',
         body: JSON.stringify({
           recipeId: recipe.id,
-          approve: true,
+          active: true,
           comment: comment,
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to update');
+      if (!res.ok) throw new Error('Failed to enable');
 
       mutate('/api/recipes');
       setIsOpen(false);
+      router.push('/admin/recipes');
     } catch (err) {
       console.error(err);
-      alert('Failed to reject recipe');
+      alert('Failed to enable recipe');
     }
   };
 
-  const handleReject = async () => {
-    if (!confirm('Are you sure you want to reject this recipe?')) return;
+  const handleDisable = async () => {
+    if (!confirm('Are you sure you want to disable this recipe?')) return;
 
     try {
       const res = await fetch(`/api/recipes`, {
         method: 'PATCH',
         body: JSON.stringify({
           recipeId: recipe.id,
-          approve: false,
+          active: false,
           comment: comment,
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to update');
+      if (!res.ok) throw new Error('Failed to disable');
 
       mutate('/api/recipes');
       setIsOpen(false);
       setComment('');
+      router.push('/admin/recipes/inactive');
     } catch (err) {
       console.error(err);
-      alert('Failed to reject recipe');
+      alert('Failed to disable recipe');
     }
   };
 
@@ -105,16 +108,16 @@ export default function Reviewer({ recipe, admin }: ReviewerProps) {
               />
               <div className='flex gap-3'>
                 <button
-                  onClick={handleApprove}
+                  onClick={handleEnable}
                   className='flex-1 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700'
                 >
-                  Approve
+                  Enable
                 </button>
                 <button
-                  onClick={handleReject}
+                  onClick={handleDisable}
                   className='flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700'
                 >
-                  Reject
+                  Disable
                 </button>
               </div>
             </motion.div>

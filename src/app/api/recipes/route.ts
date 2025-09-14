@@ -11,29 +11,25 @@ export async function GET(req: NextRequest) {
   try {
     const token = (await cookies()).get('token')?.value;
 
-    if (!token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    const decodedToken = jwt.verify(
-      token,
-      process.env.JWT_SECRET!,
-    ) as CustomJwtPayload;
-
-    const { searchParams } = new URL(req.url);
-    const inactiveFlag = searchParams.get('inactive');
-
     let recipes;
 
-    if (decodedToken.role === 'Admin') {
-      if (inactiveFlag) {
-        recipes = await prisma.recipe.findMany({ where: { active: false } });
-      } else {
-        recipes = await prisma.recipe.findMany();
-      }
+    if (!token) {
+      recipes = await prisma.recipe.findMany({ where: { active: true } });
     } else {
-      if (inactiveFlag) {
-        recipes = await prisma.recipe.findMany({ where: { active: false } });
+      const decodedToken = jwt.verify(
+        token,
+        process.env.JWT_SECRET!,
+      ) as CustomJwtPayload;
+
+      const { searchParams } = new URL(req.url);
+      const inactiveFlag = searchParams.get('inactive');
+
+      if (decodedToken.role === 'Admin') {
+        if (inactiveFlag) {
+          recipes = await prisma.recipe.findMany({ where: { active: false } });
+        } else {
+          recipes = await prisma.recipe.findMany();
+        }
       } else {
         recipes = await prisma.recipe.findMany({ where: { active: true } });
       }
@@ -123,11 +119,11 @@ export async function PATCH(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { recipeId, approve, comment } = body;
+    const { recipeId, active, comment } = body;
 
-    if (!recipeId || typeof approve !== 'boolean') {
+    if (!recipeId || typeof active !== 'boolean') {
       return NextResponse.json(
-        { message: 'Missing recipeId or approve flag' },
+        { message: 'Missing recipeId or active flag' },
         { status: 400 },
       );
     }
@@ -135,7 +131,7 @@ export async function PATCH(req: NextRequest) {
     const updatedRecipe = await prisma.recipe.update({
       where: { id: recipeId },
       data: {
-        active: approve,
+        active,
         reviewComment: comment || null,
       },
     });
