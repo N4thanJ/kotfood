@@ -63,14 +63,17 @@ export default function Navigation({ user, darkerText }: Props) {
                     Alle recepten
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href='/recipes/mine'
-                    className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
-                  >
-                    Mijn recepten
-                  </Link>
-                </li>
+
+                {user && (
+                  <li>
+                    <Link
+                      href='/recipes/mine'
+                      className='block px-4 py-2 text-gray-700 hover:bg-gray-100'
+                    >
+                      Mijn recepten
+                    </Link>
+                  </li>
+                )}
               </ul>
             </li>
 
