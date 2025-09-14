@@ -7,7 +7,7 @@ import PageHeroComponent from './PageHeroComponent';
 import ContactForm from '../contact/ContactForm';
 
 interface Props {
-  user: Pick<User, 'id' | 'email' | 'username'> | null;
+  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
 }
 
 export default function Main({ user }: Props) {

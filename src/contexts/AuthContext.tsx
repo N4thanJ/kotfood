@@ -5,7 +5,7 @@ import { createContext, ReactNode, useContext } from 'react';
 import useSWR from 'swr';
 
 interface AuthContextType {
-  user: Pick<User, 'id' | 'email' | 'username'> | null;
+  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
   isLoading: boolean;
 }
 

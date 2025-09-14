@@ -2,7 +2,7 @@ import { User } from '@/types';
 import Link from 'next/link';
 
 interface Props {
-  user: Pick<User, 'id' | 'email' | 'username'> | null;
+  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
 }
 
 export default function RecipeNavigator({ user }: Props) {

@@ -7,6 +7,7 @@ export type User = {
   email: string;
   imageUrl?: string;
   bio?: string;
+  role: Role;
   recipes: Recipe[];
 };
 
@@ -59,4 +60,9 @@ export enum Difficulty {
   Makkelijk = 'Makkelijk',
   Gemiddeld = 'Gemiddeld',
   Moeilijk = 'Moeilijk',
+}
+
+export enum Role {
+  User = 'User',
+  Admin = 'Admin',
 }

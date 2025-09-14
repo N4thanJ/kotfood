@@ -8,7 +8,7 @@ import { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 interface Props {
-  user: Pick<User, 'id' | 'email' | 'username'> | null;
+  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
 }
 
 export default function CreateComponent({ user }: Props) {

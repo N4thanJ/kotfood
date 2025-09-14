@@ -7,7 +7,7 @@ interface Props {
   recipes: Recipe[];
   error: string;
   isLoading: boolean;
-  user: Pick<User, 'id' | 'email' | 'username'> | null;
+  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
 }
 
 export default function RecipeComponent({

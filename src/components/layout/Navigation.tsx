@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 
 interface Props {
-  user: Pick<User, 'id' | 'email' | 'username'> | null;
+  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
   darkerText: boolean;
 }
 

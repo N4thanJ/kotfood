@@ -16,13 +16,20 @@ export default async function middleware(request: NextRequest) {
       if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET not set');
 
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const { payload }: { payload: JWTPayload } = await jwtVerify(
-        token,
-        secret,
-      );
+      const {
+        payload,
+      }: { payload: JWTPayload & { role?: string; id?: string } } =
+        await jwtVerify(token, secret);
 
-      request.headers.set('x-user-id', payload.id?.toString() || '');
-      console.log('JWT valid, user id:', payload.id);
+      // Check if the user is admin
+      if (payload.role !== 'Admin') {
+        console.log('Unauthorized, not an admin. Redirecting to /');
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+
+      request.headers.set('x-user-id', payload.id ?? '');
+      request.headers.set('x-user-role', payload.role ?? '');
+      console.log('JWT valid, admin user id:', payload.id);
     } catch (err) {
       console.log('JWT verification failed, redirecting to /login', err);
       return NextResponse.redirect(new URL('/login', request.url));

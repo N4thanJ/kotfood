@@ -7,7 +7,7 @@ import RecipeOverviewCard from './RecipeOverviewCard';
 
 interface Props {
   recipes: Recipe[];
-  user: Pick<User, 'id' | 'email' | 'username'> | null;
+  user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
   isLoading: boolean;
   error: string | null;
 }
