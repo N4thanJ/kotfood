@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     const personalFlag = searchParams.get('mine');
+    const inactiveFlag = searchParams.get('inactive');
 
     // 🔓 Niet ingelogd → enkel actieve recepten
     if (!token) {
@@ -44,6 +45,17 @@ export async function GET(req: NextRequest) {
       recipes = await prisma.recipe.findMany({
         where: { active: true },
       });
+    }
+
+    if (inactiveFlag && decodedToken.role === 'Admin') {
+      recipes = await prisma.recipe.findMany({
+        where: { active: false },
+      });
+    } else {
+      return NextResponse.json(
+        'You are not authorized to access this resource',
+        { status: 403 },
+      );
     }
 
     return NextResponse.json(recipes, { status: 200 });
