@@ -47,15 +47,17 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    if (inactiveFlag && decodedToken.role === 'Admin') {
-      recipes = await prisma.recipe.findMany({
-        where: { active: false },
-      });
-    } else {
-      return NextResponse.json(
-        'You are not authorized to access this resource',
-        { status: 403 },
-      );
+    if (inactiveFlag) {
+      if (decodedToken.role === 'Admin') {
+        recipes = await prisma.recipe.findMany({
+          where: { active: false },
+        });
+      } else {
+        return NextResponse.json(
+          'You are not authorized to access this resource',
+          { status: 403 },
+        );
+      }
     }
 
     return NextResponse.json(recipes, { status: 200 });
