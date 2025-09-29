@@ -31,10 +31,9 @@ export default function RecipePageComponent({
       if (!res.ok) throw new Error('Failed to save recipe');
 
       mutate(`/api/recipes/${recipeId}`);
-      alert('Recipe updated!');
     } catch (err) {
       console.error(err);
-      alert('Failed to save recipe');
+      throw new Error('Failed to save recipe');
     }
   };
 
@@ -42,7 +41,7 @@ export default function RecipePageComponent({
     <section
       className={`mx-auto flex max-w-[1200px] gap-8 px-6 ${!adminPreviewer && 'pt-24'}`}
     >
-      <div className='flex-1'>
+      <div className='mb-8 flex-1'>
         <RecipeHero recipe={recipe} />
         {canEdit ? (
           recipe.id ? (

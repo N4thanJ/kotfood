@@ -75,16 +75,16 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function PATCH(request: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop();
 
     if (!id) {
       throw new Error('ID is undefined');
     }
 
-    const { content } = await req.json();
+    const { content } = await request.json();
     const updatedRecipe = await prisma.recipe.update({
       where: { id },
       data: { content },

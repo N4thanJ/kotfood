@@ -3,10 +3,12 @@
 import RecipeService from '@/service/RecipeService';
 import { Category, Difficulty, RecipeBody, User } from '@/types';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { useRouter } from 'next/navigation';
+import CloudinaryService from '@/service/CloudService';
+import { Trash } from 'lucide-react';
 
 interface Props {
   user: Pick<User, 'id' | 'email' | 'username' | 'role'> | null;
@@ -21,6 +23,9 @@ export function getAllDifficulties(): Difficulty[] {
 }
 
 export default function CreateComponent({ user }: Props) {
+  const [selectedFile, setSelectedFile] = useState<File | undefined>();
+  const [preview, setPreview] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<RecipeBody>({
@@ -44,7 +49,16 @@ export default function CreateComponent({ user }: Props) {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const target = e.target as HTMLInputElement;
+    setFormData({ ...formData, [target.name]: target.value });
+
+    if (target.type === 'file') {
+      if (!target.files || target.files.length === 0) {
+        setSelectedFile(undefined);
+        return;
+      }
+      setSelectedFile(target.files[0]);
+    }
   };
 
   const handleNext = () => setStep((s) => s + 1);
@@ -52,8 +66,25 @@ export default function CreateComponent({ user }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const response = await trigger(formData);
+      setIsLoading(true);
+      let imageUrl = formData.imageUrl;
+
+      // Upload image if a file is selected
+      if (selectedFile) {
+        const data = new FormData();
+        data.append('file', selectedFile);
+
+        const uploadRes = await CloudinaryService.uploadImage(data);
+        if (!uploadRes.ok) throw new Error('Image upload failed');
+
+        const uploadJson = await uploadRes.json();
+        imageUrl = uploadJson.secure_url;
+      }
+
+      // Post recipe with imageUrl
+      const response = await trigger({ ...formData, imageUrl });
       mutate('/api/recipes');
 
       const createdRecipe = await response.json();
@@ -70,10 +101,27 @@ export default function CreateComponent({ user }: Props) {
         category: Category.Dessert,
         difficulty: Difficulty.Makkelijk,
       });
+      setSelectedFile(undefined);
+      setPreview(undefined);
+      setIsLoading(false);
     } catch (err: unknown) {
       console.error('Failed to create recipe:', err);
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(undefined);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
 
   if (!user) {
     return (
@@ -135,7 +183,7 @@ export default function CreateComponent({ user }: Props) {
             <button
               type='button'
               onClick={handleNext}
-              className='hover:bg-lime-600:bg-lime-500 rounded-full bg-lime-500 px-4 py-2 font-medium text-white transition-colors'
+              className='hover:bg-lime-600:bg-lime-500 rounded-md bg-lime-500 px-4 py-2 font-medium text-white transition-colors'
             >
               Volgende
             </button>
@@ -148,29 +196,74 @@ export default function CreateComponent({ user }: Props) {
               <label htmlFor='imageUrl' className='font-medium text-gray-700'>
                 Heb je een foto of afbeelding van het recept?
               </label>
-              <input
-                type='url'
-                id='imageUrl'
-                name='imageUrl'
-                value={formData.imageUrl}
-                onChange={handleChange}
-                className='rounded-md border border-gray-300 bg-gray-100 px-3 py-2'
-                required
-              />
+
+              <div className='flex flex-col gap-2'>
+                <input
+                  type='file'
+                  id='imageUrl'
+                  name='imageUrl'
+                  accept='image/*'
+                  onChange={handleChange}
+                  className='rounded-md border border-gray-300 bg-gray-100 px-3 py-2 file:mr-4 file:rounded-md file:border-0 file:bg-lime-500 file:px-4 file:py-2 file:font-medium file:text-white file:transition-colors file:hover:bg-lime-600'
+                  required
+                />
+                {selectedFile && (
+                  <div className='relative mt-2 inline-block'>
+                    <button
+                      type='button'
+                      aria-label='Verwijder afbeelding'
+                      onClick={() => {
+                        setSelectedFile(undefined);
+                        setPreview(undefined);
+                      }}
+                      className='absolute top-2 left-2 z-10 cursor-pointer rounded-full bg-white p-2 shadow-md hover:text-red-500'
+                    >
+                      {/* Trash icon from lucide-react */}
+                      <Trash />
+                    </button>
+                    <button
+                      type='button'
+                      onClick={() => {
+                        const img = document.createElement('img');
+                        img.src = preview as string;
+                        img.style.position = 'fixed';
+                        img.style.top = '0';
+                        img.style.left = '0';
+                        img.style.width = '100vw';
+                        img.style.height = '100vh';
+                        img.style.objectFit = 'contain';
+                        img.style.background = 'rgba(0,0,0,0.95)';
+                        img.style.zIndex = '9999';
+                        img.style.cursor = 'zoom-out';
+                        img.onclick = () => document.body.removeChild(img);
+                        document.body.appendChild(img);
+                      }}
+                      className='focus:outline-none'
+                      tabIndex={-1}
+                    >
+                      <img
+                        src={preview}
+                        alt='Preview'
+                        className='max-h-64 w-auto cursor-zoom-in rounded-lg border border-gray-200 object-cover shadow'
+                      />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className='flex justify-between'>
               <button
                 type='button'
                 onClick={handleBack}
-                className='hover:bg-gray-400:bg-gray-500 rounded-full bg-gray-300 px-4 py-2 font-medium text-gray-800'
+                className='cursor-pointer rounded-md bg-gray-300 px-4 py-2 font-medium text-gray-800 hover:bg-gray-400'
               >
                 Terug
               </button>
               <button
                 type='button'
                 onClick={handleNext}
-                className='hover:bg-lime-600:bg-lime-500 rounded-full bg-lime-500 px-4 py-2 font-medium text-white transition-colors'
+                className='cursor-pointer rounded-md bg-lime-500 px-4 py-2 font-medium text-white transition-colors hover:bg-lime-600'
               >
                 Volgende
               </button>
@@ -229,16 +322,16 @@ export default function CreateComponent({ user }: Props) {
               <button
                 type='button'
                 onClick={handleBack}
-                className='hover:bg-gray-400:bg-gray-500 rounded-full bg-gray-300 px-4 py-2 font-medium text-gray-800'
+                className='cursor-pointer rounded-md bg-gray-300 px-4 py-2 font-medium text-gray-800 hover:bg-gray-400'
               >
                 Terug
               </button>
               <button
                 type='submit'
                 disabled={isMutating}
-                className='hover:bg-lime-600:bg-lime-500 rounded-full bg-lime-500 px-4 py-2 font-medium text-white transition-colors'
+                className='cursor-pointer rounded-md bg-lime-500 px-4 py-2 font-medium text-white transition-colors hover:bg-lime-600'
               >
-                {isMutating ? 'Opslaan...' : 'Opslaan'}
+                {isMutating || isLoading ? 'Opslaan...' : 'Opslaan'}
               </button>
             </div>
           </>

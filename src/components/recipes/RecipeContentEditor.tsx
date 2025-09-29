@@ -1,152 +1,244 @@
 'use client';
+import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
+import { Eye, Edit, Save, Copy } from 'lucide-react';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { useState } from 'react';
+const CKEditor = dynamic(
+  async () => {
+    const mod = await import('@ckeditor/ckeditor5-react');
+    return mod.CKEditor;
+  },
+  { ssr: false },
+);
 
 interface Props {
   initialContent?: string;
   onSave: (content: string) => void;
 }
 
+const config = {
+  toolbar: [
+    'heading',
+    '|',
+    'bold',
+    'italic',
+    'link',
+    'bulletedList',
+    'numberedList',
+    '|',
+    'outdent',
+    'indent',
+    '|',
+    'blockQuote',
+    'insertTable',
+    '|',
+    'undo',
+    'redo',
+  ],
+  heading: {
+    options: [
+      {
+        model: 'paragraph' as const,
+        title: 'Paragraph',
+        class: 'ck-heading_paragraph',
+      },
+      {
+        model: 'heading1' as const,
+        view: 'h1',
+        title: 'Heading 1',
+        class: 'ck-heading_heading1',
+      },
+      {
+        model: 'heading2' as const,
+        view: 'h2',
+        title: 'Heading 2',
+        class: 'ck-heading_heading2',
+      },
+      {
+        model: 'heading3' as const,
+        view: 'h3',
+        title: 'Heading 3',
+        class: 'ck-heading_heading3',
+      },
+    ],
+  },
+  table: {
+    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
+  },
+};
+
 export default function RecipeContentEditor({
   initialContent = '',
   onSave,
 }: Props) {
   const [editorData, setEditorData] = useState(initialContent);
+  // eslint-disable-next-line
+  const [ClassicEditor, setClassicEditor] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState('edit');
+  const [isSaving, setIsSaving] = useState(false);
+  const [toast, setToast] = useState<{
+    title: string;
+    description: string;
+    variant?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    import('@ckeditor/ckeditor5-build-classic').then((mod) => {
+      const Editor = mod.default ?? mod;
+      setClassicEditor(() => Editor);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
+  const showToast = (title: string, description: string, variant?: string) => {
+    setToast({ title, description, variant });
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await onSave(editorData);
+      showToast('Recipe opgeslagen! ✅', 'Je recept is succesvol bijgewerkt.');
+    } catch {
+      showToast(
+        'Fout bij opslaan ❌',
+        'Er is iets misgegaan. Probeer het opnieuw.',
+        'destructive',
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCopyContent = async () => {
+    try {
+      const textContent = editorData.replace(/<[^>]*>/g, '');
+      await navigator.clipboard.writeText(textContent);
+      showToast('Gekopieerd! 📋', 'Recept tekst is gekopieerd naar klembord.');
+    } catch {
+      showToast(
+        'Kopiëren mislukt',
+        'Kon tekst niet kopiëren naar klembord.',
+        'destructive',
+      );
+    }
+  };
+
+  if (!ClassicEditor) {
+    return (
+      <div className='w-full rounded-lg border bg-white p-8'>
+        <div className='flex items-center justify-center gap-2'>
+          <div className='h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent'></div>
+          <p className='text-gray-600'>Editor laden...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='pt-24'>
-        <CKEditor
-          // eslint-disable-next-line
-          editor={ClassicEditor as any}
-          data={initialContent}
-          onChange={(event, editor) => {
-            const data = editor.getData();
-            setEditorData(data);
-          }}
-          onReady={(editor) => {
-            const editingView = editor.editing.view;
-            const editableElement = editingView.document.getRoot();
+    <div className='w-full space-y-4'>
+      {/* Toast notification */}
+      {toast && (
+        <div className='animate-slide-in fixed top-4 right-4 z-50 max-w-md rounded-lg border border-gray-200 bg-white p-4 shadow-lg'>
+          <div className='flex flex-col gap-1'>
+            <p
+              className={`font-semibold ${toast.variant === 'destructive' ? 'text-red-600' : 'text-gray-900'}`}
+            >
+              {toast.title}
+            </p>
+            <p className='text-sm text-gray-600'>{toast.description}</p>
+          </div>
+        </div>
+      )}
 
-            if (editableElement) {
-              editingView.change((writer) => {
-                // Add custom CSS styles to the editor content area
-                const style = document.createElement('style');
-                style.innerHTML = `
-                    .ck-content h1 {
-                      font-size: 2.25rem !important;
-                      font-weight: 700 !important;
-                      line-height: 1.2 !important;
-                      margin-top: 1.5rem !important;
-                      margin-bottom: 1rem !important;
-                      color: hsl(var(--foreground)) !important;
-                    }
-                    .ck-content h2 {
-                      font-size: 1.875rem !important;
-                      font-weight: 600 !important;
-                      line-height: 1.3 !important;
-                      margin-top: 1.25rem !important;
-                      margin-bottom: 0.75rem !important;
-                      color: hsl(var(--foreground)) !important;
-                    }
-                    .ck-content h3 {
-                      font-size: 1.5rem !important;
-                      font-weight: 600 !important;
-                      line-height: 1.4 !important;
-                      margin-top: 1rem !important;
-                      margin-bottom: 0.5rem !important;
-                      color: hsl(var(--foreground)) !important;
-                    }
-                    .ck-content p {
-                      font-size: 1rem !important;
-                      line-height: 1.6 !important;
-                      margin-bottom: 1rem !important;
-                      color: hsl(var(--foreground)) !important;
-                    }
-                    .ck-content ul, .ck-content ol {
-                      margin-bottom: 1rem !important;
-                      padding-left: 1.5rem !important;
-                    }
-                    .ck-content li {
-                      margin-bottom: 0.5rem !important;
-                      line-height: 1.6 !important;
-                    }
-                    .ck-content strong {
-                      font-weight: 600 !important;
-                    }
-                    .ck-content em {
-                      font-style: italic !important;
-                    }
-                    .ck-content blockquote {
-                      border-left: 4px solid hsl(var(--primary)) !important;
-                      padding-left: 1rem !important;
-                      margin: 1rem 0 !important;
-                      font-style: italic !important;
-                      color: hsl(var(--muted-foreground)) !important;
-                    }
-                  `;
-
-                // Append the style to the document head to ensure it applies
-                document.head.appendChild(style);
-              });
-            }
-          }}
-          config={{
-            toolbar: [
-              'heading',
-              '|',
-              'bold',
-              'italic',
-              'link',
-              'bulletedList',
-              'numberedList',
-              '|',
-              'outdent',
-              'indent',
-              '|',
-              'blockQuote',
-              'undo',
-              'redo',
-            ],
-            heading: {
-              options: [
-                {
-                  model: 'paragraph',
-                  title: 'Paragraph',
-                  class: 'ck-heading_paragraph',
-                },
-                {
-                  model: 'heading1',
-                  view: 'h1',
-                  title: 'Heading 1',
-                  class: 'ck-heading_heading1',
-                },
-                {
-                  model: 'heading2',
-                  view: 'h2',
-                  title: 'Heading 2',
-                  class: 'ck-heading_heading2',
-                },
-                {
-                  model: 'heading3',
-                  view: 'h3',
-                  title: 'Heading 3',
-                  class: 'ck-heading_heading3',
-                },
-              ],
-            },
-          }}
-        />
+      {/* Header with stats and actions */}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-2'>
+          <button
+            onClick={handleCopyContent}
+            className='flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50'
+          >
+            <Copy className='h-4 w-4' />
+            Kopiëren
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className='flex items-center gap-2 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-50'
+          >
+            {isSaving ? (
+              <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent'></div>
+            ) : (
+              <Save className='h-4 w-4' />
+            )}
+            {isSaving ? 'Opslaan...' : 'Opslaan'}
+          </button>
+        </div>
       </div>
 
-      <button
-        onClick={() => onSave(editorData)}
-        className='bg-secondary text-background hover:bg-primary mb-8 self-start rounded-xl px-4 py-2 font-semibold transition'
-      >
-        Slaag op
-      </button>
+      {/* Tabbed interface */}
+      <div className='w-full'>
+        <div className='grid w-full grid-cols-2 overflow-hidden rounded-lg border border-gray-200 bg-gray-50'>
+          <button
+            onClick={() => setActiveTab('edit')}
+            className={`flex cursor-pointer items-center justify-center gap-2 border-r border-gray-200 bg-white px-3 py-2 text-sm font-medium transition ${
+              activeTab === 'edit'
+                ? 'text-gray-900 shadow'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+            }`}
+          >
+            <Edit className='h-4 w-4' />
+            Bewerken
+          </button>
+          <button
+            onClick={() => setActiveTab('preview')}
+            className={`flex cursor-pointer items-center justify-center gap-2 bg-white px-3 py-2 text-sm font-medium transition ${
+              activeTab === 'preview'
+                ? 'text-gray-900 shadow'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+            }`}
+          >
+            <Eye className='h-4 w-4' />
+            Voorbeeld
+          </button>
+        </div>
+
+        <div className='mt-4'>
+          {activeTab === 'edit' && (
+            <div className='mb-16'>
+              <CKEditor
+                editor={ClassicEditor}
+                data={editorData}
+                onChange={(_, editor) => setEditorData(editor.getData())}
+                config={config}
+              />
+            </div>
+          )}
+
+          {activeTab === 'preview' && (
+            <>
+              {editorData ? (
+                <div
+                  className='prose prose-sm ck-content max-w-none'
+                  dangerouslySetInnerHTML={{ __html: editorData }}
+                />
+              ) : (
+                <div className='flex items-center justify-center py-8 text-gray-500'>
+                  <p>
+                    Geen inhoud om weer te geven. Begin met typen in de editor!
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
