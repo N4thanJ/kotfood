@@ -13,6 +13,7 @@ export default function ContactForm() {
     name: '',
     email: '',
     message: '',
+    subject: '',
   });
   const [errors, setErrors] = useState<{
     name?: string;
@@ -59,7 +60,7 @@ export default function ContactForm() {
 
       if (res.ok) {
         setStatus('Message sent!');
-        setFormData({ name: '', email: '', message: '' });
+        setFormData({ name: '', email: '', message: '', subject: '' });
       } else {
         setStatus('Failed to send message.');
       }
@@ -162,6 +163,18 @@ export default function ContactForm() {
           {errors.message && (
             <p className='mt-1 text-sm text-red-500'>{errors.message}</p>
           )}
+        </div>
+
+        {/* Bot prevention via Honeypot technique */}
+        <div className='absolute -z-10 h-0 w-0 overflow-hidden opacity-0'>
+          <input
+            tabIndex={-1}
+            autoComplete='off'
+            value={formData.subject}
+            onChange={(e) =>
+              setFormData({ ...formData, subject: e.target.value })
+            }
+          />
         </div>
 
         {/* Submit */}
