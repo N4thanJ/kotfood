@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #f3f4f6;
@@ -38,46 +39,8 @@ body {
 }
 
 .ck-content {
-  @apply mx-auto max-w-full text-gray-800;
-}
-
-/* Headings */
-.ck-content h1 {
-  @apply text-xl font-bold;
-}
-.ck-content h2 {
-  @apply mt-5 text-lg font-semibold;
-}
-.ck-content h3 {
-  @apply mt-4 text-sm font-semibold;
-}
-
-/* Paragraphs */
-.ck-content p {
-  @apply leading-relaxed;
-}
-
-/* Lists */
-.ck-content ul {
-  @apply mt-4 list-inside list-disc;
-}
-.ck-content ol {
-  @apply mt-4 list-inside list-decimal;
-}
-
-/* Blockquotes */
-.ck-content blockquote {
-  @apply border-l-4 border-gray-300 pl-4 text-gray-600 italic;
-}
-
-/* Images */
-.ck-content img {
-  @apply max-w-full rounded-lg;
-}
-
-/* Horizontal rule */
-.ck-content hr {
-  @apply my-2 border-t border-gray-300;
+  @apply prose prose-slate max-w-none;
+  @apply marker:text-foreground;
 }
 
 .ck.ck-editor {
@@ -96,4 +59,20 @@ body {
 }
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
+}
+
+.prose li,
+.prose p,
+.prose ol,
+.prose ul {
+  @apply marker:text-foreground !m-0;
+}
+
+.prose h1,
+.prose h2 {
+  @apply m-0 mt-4 mb-2 text-2xl;
+}
+
+.prose h3 {
+  @apply mt-4 mb-2 text-lg text-gray-800;
 }

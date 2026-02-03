@@ -225,7 +225,7 @@ export default function RecipeContentEditor({
             <>
               {editorData ? (
                 <div
-                  className='prose prose-sm ck-content max-w-none'
+                  className='prose prose-slate mt-8 max-w-none'
                   dangerouslySetInnerHTML={{ __html: editorData }}
                 />
               ) : (

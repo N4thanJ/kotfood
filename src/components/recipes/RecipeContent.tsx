@@ -7,7 +7,10 @@ interface RecipeContentProps {
 export default function RecipeContent({ content }: RecipeContentProps) {
   return (
     <article className={`recipe-content`}>
-      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
+      <div
+        className='prose prose-slate mt-8 max-w-none'
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+      />
     </article>
   );
 }
