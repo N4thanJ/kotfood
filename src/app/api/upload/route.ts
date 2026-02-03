@@ -12,8 +12,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const uploadPreset = process.env.NEXT_PUBLIC_PRESET_KEY;
-    const cloudName = process.env.NEXT_PUBLIC_CLOUD_NAME;
+    const uploadPreset = process.env.UPLOAD_PRESET;
+    const cloudName = process.env.CLOUD_NAME;
 
     if (!uploadPreset || !cloudName) {
       return NextResponse.json(

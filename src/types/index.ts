@@ -22,6 +22,7 @@ export type Recipe = {
   category?: Category;
   difficulty?: Difficulty;
   createdBy: User;
+  aiReview: string;
 };
 
 // Requestbodies
@@ -66,4 +67,12 @@ export enum Difficulty {
 export enum Role {
   User = 'User',
   Admin = 'Admin',
+}
+
+// AiChecker
+export interface AiReviewData {
+  isSuspicious: boolean;
+  reason: string;
+  redFlags: string[];
+  safetyScore: number;
 }

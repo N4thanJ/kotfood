@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
+import { scanRecipeWithAI } from '@/lib/aiScanner';
 
 interface CustomJwtPayload extends jwt.JwtPayload {
   role: string;
