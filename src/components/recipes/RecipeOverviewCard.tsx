@@ -26,7 +26,7 @@ export default function RecipeOverviewCard({ recipe, user, adminPage }: Props) {
 
       if (!res.ok) throw new Error('Failed to delete');
 
-      mutate('/api/recipes');
+      mutate('/api/recipes?inactive=true');
     } catch (err) {
       console.error(err);
       alert('Failed to delete recipe');
