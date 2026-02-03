@@ -4,9 +4,14 @@ import { LogOut } from 'lucide-react';
 interface Props {
   isAtTop: boolean;
   darkerText: boolean;
+  isMenuOpen: boolean;
 }
 
-export default function LogoutButton({ isAtTop, darkerText }: Props) {
+export default function LogoutButton({
+  isAtTop,
+  darkerText,
+  isMenuOpen,
+}: Props) {
   const handleLogout = async () => {
     try {
       const res = await UserService.logout();
@@ -21,12 +26,15 @@ export default function LogoutButton({ isAtTop, darkerText }: Props) {
     }
   };
 
+  const colorClass =
+    isAtTop && !darkerText && !isMenuOpen ? 'text-white' : 'text-red-500';
+
   return (
     <span
-      className={`flex cursor-pointer items-center gap-2 text-xl ${isAtTop && !darkerText ? 'text-white' : ''} transition hover:text-red-500`}
+      className={`flex cursor-pointer items-center gap-2 text-xl font-bold transition hover:text-red-700 ${colorClass}`}
       onClick={handleLogout}
     >
-      <LogOut size={28} />
+      {!isMenuOpen ? <LogOut size={28} /> : 'Logout'}
     </span>
   );
 }

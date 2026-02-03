@@ -77,7 +77,11 @@ export default function Navigation({ user, darkerText }: Props) {
                 isMenuOpen={isMenuOpen}
               />
             ) : (
-              <LogoutButton isAtTop={isAtTop} darkerText={darkerText} />
+              <LogoutButton
+                isAtTop={isAtTop}
+                darkerText={darkerText}
+                isMenuOpen={isMenuOpen}
+              />
             )}
           </div>
 
@@ -138,20 +142,13 @@ export default function Navigation({ user, darkerText }: Props) {
             </>
           )}
 
-          <div
-            className='border-t border-slate-100 pt-2'
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {!user ? (
-              <LoginButton
-                isAtTop={false}
-                darkerText={true}
-                isMenuOpen={true}
-              />
-            ) : (
-              <LogoutButton isAtTop={false} darkerText={true} />
-            )}
-          </div>
+          <div className='mt-2 h-1 w-24 rounded-sm bg-green-500 opacity-80'></div>
+
+          {!user ? (
+            <LoginButton isAtTop={false} darkerText={true} isMenuOpen={true} />
+          ) : (
+            <LogoutButton isAtTop={false} darkerText={true} isMenuOpen={true} />
+          )}
         </div>
       </div>
     </nav>
